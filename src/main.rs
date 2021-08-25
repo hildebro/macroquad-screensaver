@@ -39,5 +39,3 @@ async fn main() {
         next_frame().await
     }
 }
-
-fn update_characters() {}
