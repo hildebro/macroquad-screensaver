@@ -20,10 +20,13 @@ async fn main() {
         // Update width and height in case the user resized the window.
         game_state.update_absolute_size();
 
-        // Draw fps
+        // Draw fps.
         draw_text(&macroquad::time::get_fps().to_string(), 50.0, 50.0, 50.0, WHITE);
 
-        // Draw the letter.
+        // Update char position, if necessary.
+        game_state.update_char();
+
+        // Draw the char.
         draw_text(
             game_state.char_to_render(),
             game_state.char_x_pos,
@@ -32,7 +35,7 @@ async fn main() {
             WHITE,
         );
 
-        // Switch direction on key input
+        // Switch direction on key input.
         if macroquad::input::is_key_down(KeyCode::W) {
             game_state.set_direction(Direction::NORTH);
         } else if macroquad::input::is_key_down(KeyCode::D) {
@@ -43,10 +46,10 @@ async fn main() {
             game_state.set_direction(Direction::WEST);
         }
 
-        // Move the player
+        // Move the player.
         game_state.move_player();
 
-        // Draw the player
+        // Draw the player.
         draw_text(
             "R",
             game_state.player_x_pos,
@@ -54,11 +57,6 @@ async fn main() {
             50.0,
             WHITE,
         );
-
-        let loop_time = macroquad::time::get_time();
-        if loop_time - game_state.char_birthtime > 0.5 {
-            game_state.update_char(loop_time);
-        }
 
         next_frame().await
     }

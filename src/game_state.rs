@@ -5,11 +5,13 @@ const ROFLCOPTER: [&'static str; 10] = ["R", "O", "F", "L", "C", "O", "P", "T", 
 
 const PLAYER_SPEED: f32 = 5.0;
 
+const CHAR_LIFETIME: f64 = 3.0;
+
 pub enum Direction {
     NORTH,
     EAST,
     SOUTH,
-    WEST
+    WEST,
 }
 
 pub struct GameState {
@@ -23,7 +25,7 @@ pub struct GameState {
     pub char_index: usize,
     pub player_x_pos: f32,
     pub player_y_pos: f32,
-    pub player_direction: Direction
+    pub player_direction: Direction,
 }
 
 impl GameState {
@@ -40,8 +42,14 @@ impl GameState {
         ROFLCOPTER[self.char_index]
     }
 
-    pub fn update_char(&mut self, loop_time: f64)
+    pub fn update_char(&mut self)
     {
+        let loop_time = macroquad::time::get_time();
+        if loop_time - self.char_birthtime <= CHAR_LIFETIME {
+            // Don't update, if the char is too young.
+            return;
+        }
+
         // New birthtime to compare against.
         self.char_birthtime = loop_time;
 
@@ -91,7 +99,7 @@ impl GameState {
             char_index: 0,
             player_x_pos: width / 2.0,
             player_y_pos: height / 2.0,
-            player_direction: Direction::NORTH
+            player_direction: Direction::NORTH,
         }
     }
 }
