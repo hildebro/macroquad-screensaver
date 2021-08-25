@@ -27,6 +27,9 @@ async fn main() {
             next_char_index = 0;
         }
 
+        // Draw fps
+        draw_text(&macroquad::time::get_fps().to_string(), 50.0,50.0, 50.0, WHITE);
+
         next_frame().await
     }
 }
