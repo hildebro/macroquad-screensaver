@@ -31,6 +31,16 @@ async fn main() {
             WHITE,
         );
 
+        // Draw the player
+        draw_text(
+            "R",
+            game_state.player_x_pos,
+            game_state.player_y_pos,
+            50.0,
+            WHITE,
+        );
+
+
         let loop_time = macroquad::time::get_time();
         if loop_time - game_state.char_birthtime > 0.5 {
             game_state.update_char(loop_time);

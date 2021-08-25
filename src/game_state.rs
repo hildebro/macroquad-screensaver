@@ -3,6 +3,13 @@ use macroquad::prelude::rand;
 // Characters to render.
 const ROFLCOPTER: [&'static str; 10] = ["R", "O", "F", "L", "C", "O", "P", "T", "E", "R"];
 
+enum Direction {
+    NORTH,
+    EAST,
+    SOUTH,
+    WEST
+}
+
 pub struct GameState {
     pub width: f32,
     pub height: f32,
@@ -12,6 +19,9 @@ pub struct GameState {
     pub char_birthtime: f64,
     // The char index of ROFLCOPTER to render.
     pub char_index: usize,
+    pub player_x_pos: f32,
+    pub player_y_pos: f32,
+    pub player_direction: Direction
 }
 
 impl GameState {
@@ -53,6 +63,9 @@ impl GameState {
             char_y_pos,
             char_birthtime,
             char_index: 0,
+            player_x_pos: width / 2.0,
+            player_y_pos: height / 2.0,
+            player_direction: Direction::NORTH
         }
     }
 }
