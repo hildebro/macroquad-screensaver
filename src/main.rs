@@ -1,35 +1,43 @@
-use macroquad::prelude::*;
+mod game_state;
 
-// Characters to render.
-const ROFLCOPTER: [&'static str; 10] = ["R", "O", "F", "L", "C", "O", "P", "T", "E", "R"];
+use macroquad::prelude::*;
+use game_state::GameState;
 
 #[macroquad::main("Roflcopter")]
 async fn main() {
-    // Denotes which ROFLCOPTER character to render per loop.
-    let mut next_char_index: usize = 0;
+    let width = screen_width();
+    let height = screen_height();
+    let mut game_state = GameState::new(
+        width,
+        height,
+        // Get random coordinates for the char to appear at.
+        rand::gen_range(0.0, width),
+        rand::gen_range(0.0, height),
+        macroquad::time::get_time());
 
     loop {
-        // Get window size inside loop to handle resizing.
-        let height = screen_height();
-        let width = screen_width();
-
-        // Get random coordinates for the current loop.
-        let y_pos = rand::gen_range(0.0, height);
-        let x_pos = rand::gen_range(0.0, width);
-
-        // Draw the letter.
-        draw_text(ROFLCOPTER[next_char_index], x_pos, y_pos, 30.0, WHITE);
-
-        // Decide which character to render in the next loop.
-        if next_char_index < 9 {
-            next_char_index += 1;
-        } else {
-            next_char_index = 0;
-        }
+        // Update width and height in case the user resized the window.
+        game_state.update_absolute_size();
 
         // Draw fps
-        draw_text(&macroquad::time::get_fps().to_string(), 50.0,50.0, 50.0, WHITE);
+        draw_text(&macroquad::time::get_fps().to_string(), 50.0, 50.0, 50.0, WHITE);
+
+        // Draw the letter.
+        draw_text(
+            game_state.char_to_render(),
+            game_state.char_x_pos,
+            game_state.char_y_pos,
+            50.0,
+            WHITE,
+        );
+
+        let loop_time = macroquad::time::get_time();
+        if loop_time - game_state.char_birthtime > 0.5 {
+            game_state.update_char(loop_time);
+        }
 
         next_frame().await
     }
 }
+
+fn update_characters() {}
