@@ -1,23 +1,30 @@
 use macroquad::prelude::*;
 
-const LETTER: [&'static str; 10] = ["R", "O", "F", "L", "C", "O", "P", "T", "E", "R"];
+// Characters to render.
+const ROFLCOPTER: [&'static str; 10] = ["R", "O", "F", "L", "C", "O", "P", "T", "E", "R"];
 
 #[macroquad::main("Roflcopter")]
 async fn main() {
+    // Denotes which ROFLCOPTER character to render per loop.
+    let mut next_char_index: usize = 0;
 
-    let mut iteration: usize = 0;
     loop {
+        // Get window size inside loop to handle resizing.
         let height = screen_height();
         let width = screen_width();
 
+        // Get random coordinates for the current loop.
         let y_pos = rand::gen_range(0.0, height);
         let x_pos = rand::gen_range(0.0, width);
 
-        draw_text(LETTER[iteration], x_pos, y_pos, 30.0, PINK);
+        // Draw the letter.
+        draw_text(ROFLCOPTER[next_char_index], x_pos, y_pos, 30.0, WHITE);
 
-        iteration += 1;
-        if iteration > 9 {
-            iteration = 0;
+        // Decide which character to render in the next loop.
+        if next_char_index < 9 {
+            next_char_index += 1;
+        } else {
+            next_char_index = 0;
         }
 
         next_frame().await
