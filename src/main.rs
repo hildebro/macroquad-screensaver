@@ -2,6 +2,7 @@ mod game_state;
 
 use macroquad::prelude::*;
 use game_state::GameState;
+use crate::game_state::Direction;
 
 #[macroquad::main("Roflcopter")]
 async fn main() {
@@ -31,6 +32,20 @@ async fn main() {
             WHITE,
         );
 
+        // Switch direction on key input
+        if macroquad::input::is_key_down(KeyCode::W) {
+            game_state.set_direction(Direction::NORTH);
+        } else if macroquad::input::is_key_down(KeyCode::D) {
+            game_state.set_direction(Direction::EAST);
+        } else if macroquad::input::is_key_down(KeyCode::S) {
+            game_state.set_direction(Direction::SOUTH);
+        } else if macroquad::input::is_key_down(KeyCode::A) {
+            game_state.set_direction(Direction::WEST);
+        }
+
+        // Move the player
+        game_state.move_player();
+
         // Draw the player
         draw_text(
             "R",
@@ -39,7 +54,6 @@ async fn main() {
             50.0,
             WHITE,
         );
-
 
         let loop_time = macroquad::time::get_time();
         if loop_time - game_state.char_birthtime > 0.5 {
