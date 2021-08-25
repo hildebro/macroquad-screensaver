@@ -1,11 +1,14 @@
 use macroquad::prelude::rand;
+use macroquad::text::draw_text;
 
 // Characters to render.
 const ROFLCOPTER: [&'static str; 10] = ["R", "O", "F", "L", "C", "O", "P", "T", "E", "R"];
 
 const PLAYER_SPEED: f32 = 5.0;
 
-const CHAR_LIFETIME: f64 = 3.0;
+const CHAR_LIFETIME: f64 = 5.0;
+
+const COLLISION_RANGE: f32 = 20.0;
 
 pub enum Direction {
     NORTH,
@@ -26,6 +29,7 @@ pub struct GameState {
     pub player_x_pos: f32,
     pub player_y_pos: f32,
     pub player_direction: Direction,
+    pub player_size: usize,
 }
 
 impl GameState {
@@ -40,6 +44,15 @@ impl GameState {
 
     pub fn char_to_render(&self) -> &str {
         ROFLCOPTER[self.char_index]
+    }
+
+    pub fn collision_check(&mut self) {
+        let y_distance = self.player_y_pos - self.char_y_pos;
+        let x_distance = self.player_x_pos - self.char_x_pos;
+
+        if y_distance.abs() < COLLISION_RANGE && x_distance.abs() < COLLISION_RANGE {
+            self.player_size += 1;
+        }
     }
 
     pub fn update_char(&mut self)
@@ -100,6 +113,7 @@ impl GameState {
             player_x_pos: width / 2.0,
             player_y_pos: height / 2.0,
             player_direction: Direction::NORTH,
+            player_size: 0
         }
     }
 }

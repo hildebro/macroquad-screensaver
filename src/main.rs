@@ -23,6 +23,12 @@ async fn main() {
         // Draw fps.
         draw_text(&macroquad::time::get_fps().to_string(), 50.0, 50.0, 50.0, WHITE);
 
+        // Draw size (remove this later).
+        draw_text(&game_state.player_size.to_string(), 50.0, 100.0, 50.0, WHITE);
+
+        // Check collision.
+        game_state.collision_check();
+
         // Update char position, if necessary.
         game_state.update_char();
 
