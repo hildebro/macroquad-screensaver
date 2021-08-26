@@ -1,7 +1,7 @@
 // Characters to render.
 pub const ROFLCOPTER: [&'static str; 10] = ["R", "O", "F", "L", "C", "O", "P", "T", "E", "R"];
 
-pub const PLAYER_SPEED: f32 = 5.0;
+pub const PLAYER_MOVE_INTERVAL: f64 = 0.25;
 
 pub const CHAR_LIFETIME: f64 = 5.0;
 

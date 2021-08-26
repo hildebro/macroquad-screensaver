@@ -64,12 +64,20 @@ impl GameState {
     }
 
     pub fn move_player(&mut self) {
+        let loop_time = macroquad::time::get_time();
+        if loop_time - self.player_last_move_time <= PLAYER_MOVE_INTERVAL {
+            // Don't move unless a bit of time has passed since the last move.
+            return;
+        }
+
+        self.player_last_move_time = loop_time;
+
         // Actual move.
         match self.player_direction {
-            Direction::NORTH => self.player_y_pos -= PLAYER_SPEED,
-            Direction::EAST => self.player_x_pos += PLAYER_SPEED,
-            Direction::SOUTH => self.player_y_pos += PLAYER_SPEED,
-            Direction::WEST => self.player_x_pos -= PLAYER_SPEED,
+            Direction::NORTH => self.player_y_pos -= FONT_SIZE / 2.0,
+            Direction::EAST => self.player_x_pos += FONT_SIZE / 2.0,
+            Direction::SOUTH => self.player_y_pos += FONT_SIZE / 2.0,
+            Direction::WEST => self.player_x_pos -= FONT_SIZE / 2.0,
         }
 
         // Jump to the other side, if the player hits the edge.
