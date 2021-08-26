@@ -21,10 +21,10 @@ async fn main() {
         game_state.update_absolute_size();
 
         // Draw fps.
-        draw_text(&macroquad::time::get_fps().to_string(), 50.0, 50.0, 50.0, WHITE);
+        draw_text(&macroquad::time::get_fps().to_string(), 50.0, 50.0, game_state::FONT_SIZE, WHITE);
 
         // Draw size (remove this later).
-        draw_text(&game_state.player_size.to_string(), 50.0, 100.0, 50.0, WHITE);
+        draw_text(&game_state.player_size.to_string(), 50.0, 100.0, game_state::FONT_SIZE, WHITE);
 
         // Check collision.
         game_state.collision_check();
@@ -37,7 +37,7 @@ async fn main() {
             game_state.char_to_render(),
             game_state.char_x_pos,
             game_state.char_y_pos,
-            50.0,
+            game_state::FONT_SIZE,
             WHITE,
         );
 
@@ -60,7 +60,7 @@ async fn main() {
             "R",
             game_state.player_x_pos,
             game_state.player_y_pos,
-            50.0,
+            game_state::FONT_SIZE,
             WHITE,
         );
 
