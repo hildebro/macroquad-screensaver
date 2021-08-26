@@ -13,6 +13,7 @@ pub struct GameState {
     pub player_x_pos: f32,
     pub player_y_pos: f32,
     pub player_direction: Direction,
+    pub player_last_move_time: f64,
     pub player_size: usize,
 }
 
@@ -86,18 +87,22 @@ impl GameState {
         }
     }
 
-    pub fn new(width: f32, height: f32, char_x_pos: f32, char_y_pos: f32, char_birthtime: f64) -> GameState {
+    pub fn new() -> GameState {
+        let width = macroquad::window::screen_width();
+        let height = macroquad::window::screen_height();
+
         GameState {
             width,
             height,
-            char_x_pos,
-            char_y_pos,
-            char_birthtime,
+            char_x_pos: rand::gen_range(0.0, width),
+            char_y_pos: rand::gen_range(0.0, height),
+            char_birthtime: macroquad::time::get_time(),
             char_index: 0,
             player_x_pos: width / 2.0,
             player_y_pos: height / 2.0,
             player_direction: Direction::NORTH,
-            player_size: 0
+            player_last_move_time: macroquad::time::get_time(),
+            player_size: 0,
         }
     }
 }

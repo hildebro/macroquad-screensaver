@@ -1,25 +1,38 @@
+use macroquad::prelude::*;
+
+use constants::*;
+use game_state::GameState;
+
 mod game_state;
 mod constants;
 
-use macroquad::prelude::*;
-use game_state::GameState;
-use constants::*;
-
 #[macroquad::main("Roflcopter")]
 async fn main() {
-    let width = screen_width();
-    let height = screen_height();
-    let mut game_state = GameState::new(
-        width,
-        height,
-        // Get random coordinates for the char to appear at.
-        rand::gen_range(0.0, width),
-        rand::gen_range(0.0, height),
-        macroquad::time::get_time());
+    let mut game_state = GameState::new();
 
     loop {
         // Update width and height in case the user resized the window.
         game_state.update_absolute_size();
+
+        // Update char position, if necessary.
+        game_state.update_char();
+
+        // Switch direction on key input.
+        if macroquad::input::is_key_down(KeyCode::W) {
+            game_state.set_direction(Direction::NORTH);
+        } else if macroquad::input::is_key_down(KeyCode::D) {
+            game_state.set_direction(Direction::EAST);
+        } else if macroquad::input::is_key_down(KeyCode::S) {
+            game_state.set_direction(Direction::SOUTH);
+        } else if macroquad::input::is_key_down(KeyCode::A) {
+            game_state.set_direction(Direction::WEST);
+        }
+
+        // Move the player.
+        game_state.move_player();
+
+        // Check collision.
+        game_state.collision_check();
 
         // Draw fps.
         draw_text(&macroquad::time::get_fps().to_string(), 50.0, 50.0, FONT_SIZE, WHITE);
@@ -39,14 +52,8 @@ async fn main() {
             50.0,
             game_state.height - 50.0,
             FONT_SIZE,
-            WHITE
+            WHITE,
         );
-
-        // Check collision.
-        game_state.collision_check();
-
-        // Update char position, if necessary.
-        game_state.update_char();
 
         // Draw the char.
         draw_text(
@@ -56,20 +63,6 @@ async fn main() {
             FONT_SIZE,
             WHITE,
         );
-
-        // Switch direction on key input.
-        if macroquad::input::is_key_down(KeyCode::W) {
-            game_state.set_direction(Direction::NORTH);
-        } else if macroquad::input::is_key_down(KeyCode::D) {
-            game_state.set_direction(Direction::EAST);
-        } else if macroquad::input::is_key_down(KeyCode::S) {
-            game_state.set_direction(Direction::SOUTH);
-        } else if macroquad::input::is_key_down(KeyCode::A) {
-            game_state.set_direction(Direction::WEST);
-        }
-
-        // Move the player.
-        game_state.move_player();
 
         // Draw the player.
         draw_text(
