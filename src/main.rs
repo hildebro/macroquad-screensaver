@@ -35,7 +35,7 @@ async fn main() {
         game_state.collision_check();
 
         // Draw fps.
-        draw_text(&macroquad::time::get_fps().to_string(), 50.0, 50.0, FONT_SIZE, WHITE);
+        // draw_text(&macroquad::time::get_fps().to_string(), 50.0, 50.0, FONT_SIZE, WHITE);
 
         // Draw window size.
         draw_text(

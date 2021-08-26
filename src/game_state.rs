@@ -106,9 +106,9 @@ impl GameState {
             char_y_pos: rand::gen_range(0.0, height),
             char_birthtime: macroquad::time::get_time(),
             char_index: 0,
-            player_x_pos: width / 2.0,
-            player_y_pos: height / 2.0,
-            player_direction: Direction::NORTH,
+            player_x_pos: PLAYER_START_X_POS,
+            player_y_pos: PLAYER_START_Y_POS,
+            player_direction: Direction::EAST,
             player_last_move_time: macroquad::time::get_time(),
             player_size: 0,
         }
