@@ -5,8 +5,6 @@ pub struct GameState {
     pub height: f32,
     pub char_x_pos: f32,
     pub char_y_pos: f32,
-    // The time at which the current char started to appear.
-    pub char_birthtime: f64,
     // The char index of ROFLCOPTER to render.
     pub char_index: usize,
     pub player_x_pos: f32,
@@ -34,22 +32,19 @@ impl GameState {
         let y_distance = self.player_y_pos - self.char_y_pos;
         let x_distance = self.player_x_pos - self.char_x_pos;
 
-        if y_distance.abs() < COLLISION_RANGE && x_distance.abs() < COLLISION_RANGE {
-            self.player_size += 1;
+        if y_distance != 0.0 || x_distance != 0.0 {
+            // Nothing to do, if there's no collision.
+            return;
         }
+
+        // Increase size of player.
+        self.player_size += 1;
+        // Force the char update
+        self.update_char();
     }
 
     pub fn update_char(&mut self)
     {
-        let loop_time = macroquad::time::get_time();
-        if loop_time - self.char_birthtime <= CHAR_LIFETIME {
-            // Don't update, if the char is too young.
-            return;
-        }
-
-        // New birthtime to compare against.
-        self.char_birthtime = loop_time;
-
         // New location.
         let (char_x_pos, char_y_pos) = new_char_pos(self.width, self.height);
         self.char_x_pos = char_x_pos;
@@ -106,7 +101,6 @@ impl GameState {
             height,
             char_x_pos,
             char_y_pos,
-            char_birthtime: macroquad::time::get_time(),
             char_index: 0,
             player_x_pos: PLAYER_START_X_POS,
             player_y_pos: PLAYER_START_Y_POS,

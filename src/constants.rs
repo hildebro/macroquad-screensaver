@@ -8,10 +8,6 @@ pub const PLAYER_START_Y_POS: f32 = 120.0;
 
 pub const PLAYER_MOVE_INTERVAL: f64 = 0.15;
 
-pub const CHAR_LIFETIME: f64 = 8.0;
-
-pub const COLLISION_RANGE: f32 = 20.0;
-
 pub const FONT_SIZE: f32 = 60.0;
 
 pub enum Direction {

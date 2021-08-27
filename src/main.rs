@@ -14,9 +14,6 @@ async fn main() {
         // Update width and height in case the user resized the window.
         game_state.update_absolute_size();
 
-        // Update char position, if necessary.
-        game_state.update_char();
-
         // Switch direction on key input.
         if macroquad::input::is_key_down(KeyCode::W) {
             game_state.set_direction(Direction::NORTH);
