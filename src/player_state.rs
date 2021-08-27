@@ -2,8 +2,6 @@ use crate::constants::*;
 use macroquad::prelude::*;
 
 pub struct PlayerState {
-    pub width: f32,
-    pub height: f32,
     pub player_pos: [(f32, f32); 10],
     pub player_direction: Direction,
     pub player_last_move_time: f64,
@@ -22,19 +20,13 @@ impl PlayerState {
         } else if macroquad::input::is_key_down(KeyCode::A) {
             self.set_direction(Direction::WEST);
         }
-
-        self.move_player();
     }
 
-    pub fn set_direction(&mut self, direction: Direction) {
-        self.player_direction = direction;
-    }
-
-    pub fn move_player(&mut self) {
+    pub fn attempt_move(&mut self) -> bool {
         let loop_time = macroquad::time::get_time();
         if loop_time - self.player_last_move_time <= PLAYER_MOVE_INTERVAL {
             // Don't move unless a bit of time has passed since the last move.
-            return;
+            return false;
         }
 
         // Reset the compare time.
@@ -53,19 +45,11 @@ impl PlayerState {
             Direction::SOUTH => self.set_player_y_pos(self.player_y_pos() + FONT_SIZE / 2.0),
         }
 
-        // Jump to the other side, if the player hits the edge.
-        if self.player_x_pos() >= self.width {
-            self.set_player_x_pos(0.0);
-        }
-        if self.player_x_pos() < 0.0 {
-            self.set_player_x_pos(self.width - FONT_SIZE / 2.0);
-        }
-        if self.player_y_pos() >= self.height {
-            self.set_player_y_pos(0.0);
-        }
-        if self.player_y_pos() < 0.0 {
-            self.set_player_y_pos(self.height - FONT_SIZE / 2.0);
-        }
+        return true;
+    }
+
+    pub fn set_direction(&mut self, direction: Direction) {
+        self.player_direction = direction;
     }
 
     pub fn player_x_pos(&self) -> f32 {
@@ -96,10 +80,8 @@ impl PlayerState {
         }
     }
 
-    pub fn new(width: f32, height: f32) -> PlayerState {
+    pub fn new() -> PlayerState {
         PlayerState {
-            width,
-            height,
             player_pos: [
                 // Start the snake `expanded` even though the characters aren't visible yet.
                 // In the future, the should all be on the head position and only expand once

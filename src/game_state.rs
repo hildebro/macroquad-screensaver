@@ -17,6 +17,7 @@ impl GameState {
     pub fn update(&mut self) {
         self.update_absolute_size();
 
+        self.move_player();
         self.collision_check();
 
         self.player_state.update();
@@ -80,6 +81,28 @@ impl GameState {
         }
     }
 
+    pub fn move_player(&mut self) {
+        let player_moved = self.player_state.attempt_move();
+        if !player_moved {
+            // No need to check for out-of-bounds movement, when no move happened.
+            return;
+        }
+
+        // Jump to the other side, if the player hits the edge.
+        if self.player_state.player_x_pos() >= self.width {
+            self.player_state.set_player_x_pos(0.0);
+        }
+        if self.player_state.player_x_pos() < 0.0 {
+            self.player_state.set_player_x_pos(self.width - FONT_SIZE / 2.0);
+        }
+        if self.player_state.player_y_pos() >= self.height {
+            self.player_state.set_player_y_pos(0.0);
+        }
+        if self.player_state.player_y_pos() < 0.0 {
+            self.player_state.set_player_y_pos(self.height - FONT_SIZE / 2.0);
+        }
+    }
+
     pub fn new() -> GameState {
         let width = macroquad::window::screen_width();
         let height = macroquad::window::screen_height();
@@ -92,7 +115,7 @@ impl GameState {
             char_x_pos,
             char_y_pos,
             char_index: 1,
-            player_state: PlayerState::new(width, height)
+            player_state: PlayerState::new()
         }
     }
 }
