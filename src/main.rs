@@ -6,7 +6,15 @@ use game_state::GameState;
 mod game_state;
 mod constants;
 
-#[macroquad::main("Roflcopter")]
+fn window_conf() -> Conf {
+    Conf {
+        window_title: "Roflcopter".to_owned(),
+        fullscreen: true,
+        ..Default::default()
+    }
+}
+
+#[macroquad::main(window_conf)]
 async fn main() {
     let mut game_state = GameState::new();
 
@@ -35,13 +43,13 @@ async fn main() {
         // draw_text(&macroquad::time::get_fps().to_string(), 50.0, 50.0, FONT_SIZE, WHITE);
 
         // Draw window size.
-        draw_text(
-            &format!("{} x {}", game_state.width, game_state.height),
-            game_state.width - 300.0,
-            50.0,
-            FONT_SIZE,
-            WHITE,
-        );
+        // draw_text(
+        //     &format!("{} x {}", game_state.width, game_state.height),
+        //     game_state.width - 300.0,
+        //     50.0,
+        //     FONT_SIZE,
+        //     WHITE,
+        // );
 
         // Draw player size (remove later).
         draw_text(
