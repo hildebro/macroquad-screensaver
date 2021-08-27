@@ -3,12 +3,14 @@ use macroquad::prelude::rand;
 // Characters to render.
 pub const ROFLCOPTER: [&'static str; 10] = ["R", "O", "F", "L", "C", "O", "P", "T", "E", "R"];
 
-pub const PLAYER_START_X_POS: f32 = 120.0;
-pub const PLAYER_START_Y_POS: f32 = 120.0;
+pub const PLAYER_START_X_POS: f32 = 12.0;
+pub const PLAYER_START_Y_POS: f32 = 12.0;
 
-pub const PLAYER_MOVE_INTERVAL: f64 = 0.1;
+pub const PLAYER_MOVE_INTERVAL: f64 = 0.01;
 
-pub const FONT_SIZE: f32 = 120.0;
+pub const INSTANCE_COUNT: usize = 5000;
+
+pub const FONT_SIZE: f32 = 12.0;
 
 pub enum Direction {
     North,

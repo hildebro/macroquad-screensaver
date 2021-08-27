@@ -24,11 +24,16 @@ async fn main() {
         .expect("Unable to read systemt time.");
     rand::srand(current_millisecond.as_secs());
 
-    let mut game_state = GameState::new();
+    let mut game_instances: Vec<GameState> = Vec::new();
+    for _ in 0..constants::INSTANCE_COUNT {
+        game_instances.push(GameState::new())
+    }
 
     loop {
-        game_state.update();
-        game_state.draw();
+        for game_state in &mut game_instances {
+            game_state.update();
+            game_state.draw();
+        }
 
         next_frame().await
     }

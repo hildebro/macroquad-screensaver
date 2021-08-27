@@ -6,6 +6,7 @@ pub struct PlayerState {
     pub player_direction: Direction,
     pub player_last_move_time: f64,
     pub collected_letters: usize,
+    pub color: Color,
 }
 
 impl PlayerState {
@@ -66,12 +67,16 @@ impl PlayerState {
                 self.player_pos[i].0,
                 self.player_pos[i].1,
                 FONT_SIZE,
-                WHITE,
+                self.color,
             );
         }
     }
 
     pub fn new() -> PlayerState {
+        let r = rand::gen_range(0.5, 1.0);
+        let g = rand::gen_range(0.5, 1.0);
+        let b = rand::gen_range(0.5, 1.0);
+
         PlayerState {
             player_pos: [
                 // Start the snake `expanded` even though the characters aren't visible yet.
@@ -91,6 +96,7 @@ impl PlayerState {
             player_direction: Direction::East,
             player_last_move_time: macroquad::time::get_time(),
             collected_letters: 0,
+            color: Color::new(r, g, b, 1.0),
         }
     }
 }

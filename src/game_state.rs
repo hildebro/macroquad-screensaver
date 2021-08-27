@@ -72,7 +72,7 @@ impl GameState {
             self.char_x_pos,
             self.char_y_pos,
             FONT_SIZE,
-            WHITE,
+            self.player_state.color,
         );
     }
 
