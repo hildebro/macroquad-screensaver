@@ -1,4 +1,3 @@
-use macroquad::prelude::rand;
 use crate::constants::*;
 
 pub struct GameState {
@@ -52,8 +51,9 @@ impl GameState {
         self.char_birthtime = loop_time;
 
         // New location.
-        self.char_x_pos = rand::gen_range(0.0, self.width);
-        self.char_y_pos = rand::gen_range(0.0, self.height);
+        let (char_x_pos, char_y_pos) = new_char_pos(self.width, self.height);
+        self.char_x_pos = char_x_pos;
+        self.char_y_pos = char_y_pos;
 
         // New char to render.
         if self.char_index < 9 {
@@ -99,11 +99,13 @@ impl GameState {
         let width = macroquad::window::screen_width();
         let height = macroquad::window::screen_height();
 
+        let (char_x_pos, char_y_pos) = new_char_pos(width, height);
+
         GameState {
             width,
             height,
-            char_x_pos: rand::gen_range(0.0, width),
-            char_y_pos: rand::gen_range(0.0, height),
+            char_x_pos,
+            char_y_pos,
             char_birthtime: macroquad::time::get_time(),
             char_index: 0,
             player_x_pos: PLAYER_START_X_POS,
