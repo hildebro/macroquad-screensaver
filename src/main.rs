@@ -49,15 +49,6 @@ async fn main() {
         // Draw fps.
         // draw_text(&macroquad::time::get_fps().to_string(), 50.0, 50.0, FONT_SIZE, WHITE);
 
-        // Draw window size.
-        // draw_text(
-        //     &format!("{} x {}", game_state.width, game_state.height),
-        //     game_state.width - 300.0,
-        //     50.0,
-        //     FONT_SIZE,
-        //     WHITE,
-        // );
-
         // Draw player size (remove later).
         draw_text(
             &game_state.player_size.to_string(),
