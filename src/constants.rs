@@ -6,15 +6,30 @@ pub const ROFLCOPTER: [&'static str; 10] = ["R", "O", "F", "L", "C", "O", "P", "
 pub const PLAYER_START_X_POS: f32 = 120.0;
 pub const PLAYER_START_Y_POS: f32 = 120.0;
 
-pub const PLAYER_MOVE_INTERVAL: f64 = 0.15;
+pub const PLAYER_MOVE_INTERVAL: f64 = 0.1;
 
 pub const FONT_SIZE: f32 = 120.0;
 
 pub enum Direction {
-    NORTH,
-    EAST,
-    SOUTH,
-    WEST,
+    North,
+    South,
+    West,
+    East,
+}
+
+#[derive(PartialEq)]
+pub enum Plane {
+    Vertical,
+    Horizontal
+}
+
+pub fn plane_of_direction(direction: &Direction) -> Plane {
+    match direction {
+        Direction::North => {Plane::Vertical}
+        Direction::South => {Plane::Vertical}
+        Direction::West => {Plane::Horizontal}
+        Direction::East => {Plane::Horizontal}
+    }
 }
 
 /// The position of an element needs to be adjusted in order to fit neatly into the grid.

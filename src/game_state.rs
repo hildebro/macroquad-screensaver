@@ -16,11 +16,46 @@ pub struct GameState {
 impl GameState {
     pub fn update(&mut self) {
         self.update_absolute_size();
-
+        self.update_player_direction();
         self.move_player();
         self.collision_check();
+    }
 
-        self.player_state.update();
+    pub fn update_player_direction(&mut self) {
+        let plane_of_direction = plane_of_direction(&self.player_state.player_direction);
+        let player_x_pos = self.player_state.player_x_pos();
+        let player_y_pos = self.player_state.player_y_pos();
+
+        if player_x_pos != self.char_x_pos
+            && plane_of_direction == Plane::Horizontal {
+            // If we aren't above/below the collectible and already moving on the horizontal plane,
+            // we just continue;
+            return;
+        }
+
+        if player_y_pos != self.char_y_pos
+            && plane_of_direction == Plane::Vertical {
+            // If we aren't left/right the collectible and already moving on the vertical plane,
+            // we just continue;
+            return;
+        }
+
+        // At this point, we know that we need to change direction.
+        if player_x_pos == self.char_x_pos {
+            // Horizontally aligned, so we need to either go north or south.
+            if player_y_pos < self.char_y_pos {
+                self.player_state.player_direction = Direction::South;
+            } else {
+                self.player_state.player_direction = Direction::North;
+            }
+        } else {
+            // Vertically aligned, so we need to either go west or east.
+            if player_x_pos < self.char_x_pos {
+                self.player_state.player_direction = Direction::East;
+            } else {
+                self.player_state.player_direction = Direction::West;
+            }
+        }
     }
 
     pub fn draw(&self) {
@@ -112,7 +147,7 @@ impl GameState {
             char_x_pos,
             char_y_pos,
             char_index: 1,
-            player_state: PlayerState::new()
+            player_state: PlayerState::new(),
         }
     }
 }

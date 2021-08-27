@@ -9,19 +9,6 @@ pub struct PlayerState {
 }
 
 impl PlayerState {
-    pub fn update(&mut self) {
-        // Switch direction on key input.
-        if macroquad::input::is_key_down(KeyCode::W) {
-            self.set_direction(Direction::NORTH);
-        } else if macroquad::input::is_key_down(KeyCode::D) {
-            self.set_direction(Direction::EAST);
-        } else if macroquad::input::is_key_down(KeyCode::S) {
-            self.set_direction(Direction::SOUTH);
-        } else if macroquad::input::is_key_down(KeyCode::A) {
-            self.set_direction(Direction::WEST);
-        }
-    }
-
     pub fn attempt_move(&mut self) -> bool {
         let loop_time = macroquad::time::get_time();
         if loop_time - self.player_last_move_time <= PLAYER_MOVE_INTERVAL {
@@ -39,17 +26,13 @@ impl PlayerState {
 
         // Move the head to a new position.
         match self.player_direction {
-            Direction::WEST => self.set_player_x_pos(self.player_x_pos() - FONT_SIZE / 2.0),
-            Direction::EAST => self.set_player_x_pos(self.player_x_pos() + FONT_SIZE / 2.0),
-            Direction::NORTH => self.set_player_y_pos(self.player_y_pos() - FONT_SIZE / 2.0),
-            Direction::SOUTH => self.set_player_y_pos(self.player_y_pos() + FONT_SIZE / 2.0),
+            Direction::West => self.set_player_x_pos(self.player_x_pos() - FONT_SIZE / 2.0),
+            Direction::East => self.set_player_x_pos(self.player_x_pos() + FONT_SIZE / 2.0),
+            Direction::North => self.set_player_y_pos(self.player_y_pos() - FONT_SIZE / 2.0),
+            Direction::South => self.set_player_y_pos(self.player_y_pos() + FONT_SIZE / 2.0),
         }
 
         return true;
-    }
-
-    pub fn set_direction(&mut self, direction: Direction) {
-        self.player_direction = direction;
     }
 
     pub fn register_collision(&mut self) {
@@ -105,7 +88,7 @@ impl PlayerState {
                 (PLAYER_START_X_POS, PLAYER_START_Y_POS + FONT_SIZE * 4.0),
                 (PLAYER_START_X_POS, PLAYER_START_Y_POS + FONT_SIZE * 4.5),
             ],
-            player_direction: Direction::EAST,
+            player_direction: Direction::East,
             player_last_move_time: macroquad::time::get_time(),
             collected_letters: 0,
         }
