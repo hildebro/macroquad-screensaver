@@ -70,13 +70,7 @@ async fn main() {
         );
 
         // Draw the player.
-        draw_text(
-            "R",
-            game_state.player_x_pos,
-            game_state.player_y_pos,
-            FONT_SIZE,
-            WHITE,
-        );
+        game_state.draw_player();
 
         next_frame().await
     }
