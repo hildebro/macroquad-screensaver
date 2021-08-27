@@ -26,7 +26,7 @@ pub fn fix_to_grid(num: f32) -> f32 {
 
 pub fn new_char_pos(width: f32, height: f32) -> (f32, f32) {
     (
-        fix_to_grid(rand::gen_range(0.0, width)),
-        fix_to_grid(rand::gen_range(0.0, height)),
+        fix_to_grid(rand::gen_range(120.0, width - 120.0)),
+        fix_to_grid(rand::gen_range(120.0, height - 120.0)),
     )
 }

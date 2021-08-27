@@ -1,4 +1,5 @@
 use macroquad::prelude::*;
+use std::time::{SystemTime, UNIX_EPOCH};
 
 use constants::*;
 use game_state::GameState;
@@ -16,6 +17,12 @@ fn window_conf() -> Conf {
 
 #[macroquad::main(window_conf)]
 async fn main() {
+    // Set seed for randomness.
+    let current_millisecond = SystemTime::now()
+        .duration_since(UNIX_EPOCH)
+        .expect("Unable to read systemt time.");
+    rand::srand(current_millisecond.as_secs());
+
     let mut game_state = GameState::new();
 
     loop {
