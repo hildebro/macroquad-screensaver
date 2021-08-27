@@ -52,16 +52,13 @@ impl GameState {
     }
 
     pub fn collision_check(&mut self) {
-        let x_distance = self.player_state.player_x_pos() - self.char_x_pos;
-        let y_distance = self.player_state.player_y_pos() - self.char_y_pos;
-
-        if y_distance != 0.0 || x_distance != 0.0 {
+        if self.player_state.player_x_pos() != self.char_x_pos
+            || self.player_state.player_y_pos() != self.char_y_pos {
             // Nothing to do, if there's no collision.
             return;
         }
 
-        // Increase size of player.
-        self.player_state.player_size += 1;
+        self.player_state.register_collision();
         // Force the char update
         self.update_char();
     }

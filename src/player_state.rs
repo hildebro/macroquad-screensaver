@@ -5,7 +5,7 @@ pub struct PlayerState {
     pub player_pos: [(f32, f32); 10],
     pub player_direction: Direction,
     pub player_last_move_time: f64,
-    pub player_size: usize,
+    pub collected_letters: usize,
 }
 
 impl PlayerState {
@@ -52,6 +52,14 @@ impl PlayerState {
         self.player_direction = direction;
     }
 
+    pub fn register_collision(&mut self) {
+        if self.collected_letters < 9 {
+            self.collected_letters += 1;
+        } else {
+            self.collected_letters = 0;
+        }
+    }
+
     pub fn player_x_pos(&self) -> f32 {
         self.player_pos[0].0
     }
@@ -69,7 +77,7 @@ impl PlayerState {
     }
 
     pub fn draw(&self) {
-        for i in 0..=self.player_size {
+        for i in 0..=self.collected_letters {
             draw_text(
                 ROFLCOPTER[i],
                 self.player_pos[i].0,
@@ -99,7 +107,7 @@ impl PlayerState {
             ],
             player_direction: Direction::EAST,
             player_last_move_time: macroquad::time::get_time(),
-            player_size: 0,
+            collected_letters: 0,
         }
     }
 }
