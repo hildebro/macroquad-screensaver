@@ -1,5 +1,7 @@
-use crate::constants::*;
 use macroquad::prelude::*;
+
+use crate::constants::*;
+use crate::player_state::PlayerState;
 
 pub struct GameState {
     pub width: f32,
@@ -8,17 +10,37 @@ pub struct GameState {
     pub char_y_pos: f32,
     // The char index of ROFLCOPTER to render.
     pub char_index: usize,
-    pub player_pos: [(f32, f32); 10],
-    pub player_direction: Direction,
-    pub player_last_move_time: f64,
-    pub player_size: usize,
+    pub player_state: PlayerState,
 }
 
 impl GameState {
-    pub fn set_direction(&mut self, direction: Direction) {
-        self.player_direction = direction;
+    pub fn update(&mut self) {
+        self.update_absolute_size();
+
+        self.collision_check();
+
+        self.player_state.update();
     }
 
+    pub fn draw(&self) {
+        // Draw fps.
+        // draw_text(&macroquad::time::get_fps().to_string(), 50.0, 50.0, FONT_SIZE, WHITE);
+
+        // Draw the player.
+        self.player_state.draw();
+
+
+        // Draw the char.
+        draw_text(
+            self.char_to_render(),
+            self.char_x_pos,
+            self.char_y_pos,
+            FONT_SIZE,
+            WHITE,
+        );
+    }
+
+    /// Update width and height in case the user resizes the window.
     pub fn update_absolute_size(&mut self) {
         self.width = macroquad::window::screen_width();
         self.height = macroquad::window::screen_height();
@@ -29,8 +51,8 @@ impl GameState {
     }
 
     pub fn collision_check(&mut self) {
-        let x_distance = self.player_x_pos() - self.char_x_pos;
-        let y_distance = self.player_y_pos() - self.char_y_pos;
+        let x_distance = self.player_state.player_x_pos() - self.char_x_pos;
+        let y_distance = self.player_state.player_y_pos() - self.char_y_pos;
 
         if y_distance != 0.0 || x_distance != 0.0 {
             // Nothing to do, if there's no collision.
@@ -38,7 +60,7 @@ impl GameState {
         }
 
         // Increase size of player.
-        self.player_size += 1;
+        self.player_state.player_size += 1;
         // Force the char update
         self.update_char();
     }
@@ -58,72 +80,6 @@ impl GameState {
         }
     }
 
-    pub fn move_player(&mut self) {
-        let loop_time = macroquad::time::get_time();
-        if loop_time - self.player_last_move_time <= PLAYER_MOVE_INTERVAL {
-            // Don't move unless a bit of time has passed since the last move.
-            return;
-        }
-
-        // Reset the compare time.
-        self.player_last_move_time = loop_time;
-
-        // Move all body parts one step closer to the head.
-        for i in (0..self.player_pos.len() - 1).rev() {
-            self.player_pos[i + 1] = self.player_pos[i];
-        }
-
-        // Move the head to a new position.
-        match self.player_direction {
-            Direction::WEST => self.set_player_x_pos(self.player_x_pos() - FONT_SIZE / 2.0),
-            Direction::EAST => self.set_player_x_pos(self.player_x_pos() + FONT_SIZE / 2.0),
-            Direction::NORTH => self.set_player_y_pos(self.player_y_pos() - FONT_SIZE / 2.0),
-            Direction::SOUTH => self.set_player_y_pos(self.player_y_pos() + FONT_SIZE / 2.0),
-        }
-
-        // Jump to the other side, if the player hits the edge.
-        if self.player_x_pos() >= self.width {
-            self.set_player_x_pos(0.0);
-        }
-        if self.player_x_pos() < 0.0 {
-            self.set_player_x_pos(self.width - FONT_SIZE / 2.0);
-        }
-        if self.player_y_pos() >= self.height {
-            self.set_player_y_pos(0.0);
-        }
-        if self.player_y_pos() < 0.0 {
-            self.set_player_y_pos(self.height - FONT_SIZE / 2.0);
-        }
-    }
-
-    pub fn player_x_pos(&self) -> f32 {
-        self.player_pos[0].0
-    }
-
-    pub fn set_player_x_pos(&mut self, pos: f32) {
-        self.player_pos[0].0 = pos;
-    }
-
-    pub fn player_y_pos(&self) -> f32 {
-        self.player_pos[0].1
-    }
-
-    pub fn set_player_y_pos(&mut self, pos: f32) {
-        self.player_pos[0].1 = pos;
-    }
-
-    pub fn draw_player(&self) {
-        for i in 0..=self.player_size {
-            draw_text(
-                ROFLCOPTER[i],
-                self.player_pos[i].0,
-                self.player_pos[i].1,
-                FONT_SIZE,
-                WHITE,
-            );
-        }
-    }
-
     pub fn new() -> GameState {
         let width = macroquad::window::screen_width();
         let height = macroquad::window::screen_height();
@@ -136,24 +92,7 @@ impl GameState {
             char_x_pos,
             char_y_pos,
             char_index: 1,
-            player_pos: [
-                // Start the snake `expanded` even though the characters aren't visible yet.
-                // In the future, the should all be on the head position and only expand once
-                // they are actually collected and visible.
-                (PLAYER_START_X_POS, PLAYER_START_Y_POS),
-                (PLAYER_START_X_POS, PLAYER_START_Y_POS + FONT_SIZE / 2.0),
-                (PLAYER_START_X_POS, PLAYER_START_Y_POS + FONT_SIZE),
-                (PLAYER_START_X_POS, PLAYER_START_Y_POS + FONT_SIZE * 1.5),
-                (PLAYER_START_X_POS, PLAYER_START_Y_POS + FONT_SIZE * 2.0),
-                (PLAYER_START_X_POS, PLAYER_START_Y_POS + FONT_SIZE * 2.5),
-                (PLAYER_START_X_POS, PLAYER_START_Y_POS + FONT_SIZE * 3.0),
-                (PLAYER_START_X_POS, PLAYER_START_Y_POS + FONT_SIZE * 3.5),
-                (PLAYER_START_X_POS, PLAYER_START_Y_POS + FONT_SIZE * 4.0),
-                (PLAYER_START_X_POS, PLAYER_START_Y_POS + FONT_SIZE * 4.5),
-            ],
-            player_direction: Direction::EAST,
-            player_last_move_time: macroquad::time::get_time(),
-            player_size: 0,
+            player_state: PlayerState::new(width, height)
         }
     }
 }
