@@ -69,7 +69,7 @@ impl GameState {
         self.player_last_move_time = loop_time;
 
         // Move all body parts one step closer to the head.
-        for i in (0..self.player_pos.len() - 2).rev() {
+        for i in (0..self.player_pos.len() - 1).rev() {
             self.player_pos[i + 1] = self.player_pos[i];
         }
 
