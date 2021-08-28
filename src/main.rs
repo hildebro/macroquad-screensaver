@@ -7,6 +7,7 @@ use game_state::GameState;
 mod game_state;
 mod constants;
 mod player_state;
+mod pathfinder;
 
 fn window_conf() -> Conf {
     Conf {

@@ -2,6 +2,7 @@ use macroquad::prelude::*;
 
 use crate::constants::*;
 use crate::player_state::PlayerState;
+use crate::pathfinder::*;
 
 pub struct GameState {
     pub width: f32,
@@ -11,6 +12,7 @@ pub struct GameState {
     // The char index of ROFLCOPTER to render.
     pub char_index: usize,
     pub player_state: PlayerState,
+    pub pathfinder: Pathfinder,
 }
 
 impl GameState {
@@ -22,45 +24,26 @@ impl GameState {
     }
 
     pub fn update_player_direction(&mut self) {
-        let plane_of_direction = plane_of_direction(&self.player_state.player_direction);
-        let player_x_pos = self.player_state.player_x_pos();
-        let player_y_pos = self.player_state.player_y_pos();
-
-        if player_x_pos != self.char_x_pos
-            && plane_of_direction == Plane::Horizontal {
-            // If we aren't above/below the collectible and already moving on the horizontal plane,
-            // we just continue;
-            return;
-        }
-
-        if player_y_pos != self.char_y_pos
-            && plane_of_direction == Plane::Vertical {
-            // If we aren't left/right the collectible and already moving on the vertical plane,
-            // we just continue;
-            return;
-        }
-
-        // At this point, we know that we need to change direction.
-        if player_x_pos == self.char_x_pos {
-            // Horizontally aligned, so we need to either go north or south.
-            if player_y_pos < self.char_y_pos {
-                self.player_state.player_direction = Direction::South;
-            } else {
-                self.player_state.player_direction = Direction::North;
+        for pathfinder_tuple in PATHFINDER_MAPPING {
+            if self.pathfinder != pathfinder_tuple.0 {
+                // Continue until the pathfinder matches.
+                continue;
             }
-        } else {
-            // Vertically aligned, so we need to either go west or east.
-            if player_x_pos < self.char_x_pos {
-                self.player_state.player_direction = Direction::East;
-            } else {
-                self.player_state.player_direction = Direction::West;
+
+            let pathfinder_fn = pathfinder_tuple.1;
+            let pathfinder_result = pathfinder_fn(self);
+            match pathfinder_result {
+                PathfinderResult::KeepGoing => {}
+                PathfinderResult::NewDirection(direction) => {
+                    self.player_state.player_direction = direction;
+                }
             }
         }
     }
 
     pub fn draw(&self) {
         // Draw fps.
-        // draw_text(&macroquad::time::get_fps().to_string(), 50.0, 50.0, FONT_SIZE, WHITE);
+        draw_text(&macroquad::time::get_fps().to_string(), 50.0, 50.0, 40.0, WHITE);
 
         // Draw the player.
         self.player_state.draw();
@@ -148,6 +131,7 @@ impl GameState {
             char_y_pos,
             char_index: 1,
             player_state: PlayerState::new(),
+            pathfinder: Pathfinder::LazyWalker,
         }
     }
 }
