@@ -1,10 +1,9 @@
 use std::time::{SystemTime, UNIX_EPOCH};
 
 use macroquad::prelude::*;
+use roflcopter_snake_lib::game_state::GameState;
 
-use roflcopter_lib::game_state::GameState;
-
-pub const INSTANCE_COUNT: usize = 750;
+pub const INSTANCE_COUNT: usize = 500;
 
 fn window_conf() -> Conf {
     Conf {

@@ -4,6 +4,7 @@ use macroquad::prelude::*;
 pub struct PlayerState {
     pub player_pos: [(f32, f32); 10],
     pub player_direction: Direction,
+    pub direction_switch_since_move: bool,
     pub player_last_move_time: f64,
     pub collected_letters: usize,
     pub color: Color,
@@ -19,6 +20,8 @@ impl PlayerState {
 
         // Reset the compare time.
         self.player_last_move_time = loop_time;
+        // Reset direction switcher.
+        self.direction_switch_since_move = false;
 
         // Move all body parts one step closer to the head.
         for i in (0..self.player_pos.len() - 1).rev() {
@@ -94,6 +97,7 @@ impl PlayerState {
                 (PLAYER_START_X_POS, PLAYER_START_Y_POS + FONT_SIZE * 4.5),
             ],
             player_direction: Direction::East,
+            direction_switch_since_move: false,
             player_last_move_time: macroquad::time::get_time(),
             collected_letters: 0,
             color: Color::new(r, g, b, 1.0),

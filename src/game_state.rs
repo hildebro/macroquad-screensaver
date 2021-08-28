@@ -24,6 +24,11 @@ impl GameState {
     }
 
     pub fn update_player_direction(&mut self) {
+        if self.player_state.direction_switch_since_move {
+            // Switch direction at most once between moves.
+            return;
+        }
+
         for pathfinder_tuple in PATHFINDER_MAPPING {
             if self.pathfinder != pathfinder_tuple.0 {
                 // Continue until the pathfinder matches.
@@ -36,6 +41,7 @@ impl GameState {
                 PathfinderResult::KeepGoing => {}
                 PathfinderResult::NewDirection(direction) => {
                     self.player_state.player_direction = direction;
+                    self.player_state.direction_switch_since_move = true;
                 }
             }
         }
