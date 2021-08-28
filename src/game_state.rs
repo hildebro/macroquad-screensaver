@@ -18,9 +18,19 @@ pub struct GameState {
 impl GameState {
     pub fn update(&mut self) {
         self.update_absolute_size();
+        self.update_pathfinder();
         self.update_player_direction();
         self.move_player();
         self.collision_check();
+    }
+
+    fn update_pathfinder(&mut self) {
+        if macroquad::input::is_mouse_button_pressed(MouseButton::Left) {
+            match self.pathfinder {
+                Pathfinder::LazyWalker => self.pathfinder = Pathfinder::StepWalker,
+                Pathfinder::StepWalker => self.pathfinder = Pathfinder::LazyWalker,
+            }
+        }
     }
 
     pub fn update_player_direction(&mut self) {
@@ -135,7 +145,7 @@ impl GameState {
             char_y_pos,
             char_index: 1,
             player_state: PlayerState::new(),
-            pathfinder: Pathfinder::StepWalker,
+            pathfinder: Pathfinder::LazyWalker,
         }
     }
 }
