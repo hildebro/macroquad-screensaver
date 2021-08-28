@@ -1,4 +1,5 @@
 mod constants;
-pub mod game_instance;
+mod game_instance;
+pub mod game_state;
 mod pathfinder;
 mod player_state;
