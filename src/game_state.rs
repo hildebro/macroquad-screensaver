@@ -135,7 +135,7 @@ impl GameState {
             char_y_pos,
             char_index: 1,
             player_state: PlayerState::new(),
-            pathfinder: Pathfinder::LazyWalker,
+            pathfinder: Pathfinder::StepWalker,
         }
     }
 }
