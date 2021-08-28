@@ -39,17 +39,8 @@ impl GameState {
             return;
         }
 
-        for pathfinder_tuple in PATHFINDER_MAPPING {
-            if self.pathfinder != pathfinder_tuple.0 {
-                // Continue until the pathfinder matches.
-                continue;
-            }
-
-            let pathfinder_fn = pathfinder_tuple.1;
-            let pathfinder_direction = pathfinder_fn(self);
-            self.player_state.player_direction = pathfinder_direction;
-            self.player_state.direction_switch_since_move = true;
-        }
+        self.player_state.player_direction = find_path(self);
+        self.player_state.direction_switch_since_move = true;
     }
 
     pub fn draw(&self) {

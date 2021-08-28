@@ -9,12 +9,12 @@ pub enum Pathfinder {
     StepWalker,
 }
 
-type PathfinderFn = fn(&GameState) -> Direction;
-
-pub static PATHFINDER_MAPPING: &'static [(Pathfinder, PathfinderFn)] = &[
-    (Pathfinder::LazyWalker, lazy_walker_fn),
-    (Pathfinder::StepWalker, step_walker_fn),
-];
+pub fn find_path(game_state: &GameState) -> Direction {
+    match game_state.pathfinder {
+        Pathfinder::LazyWalker => lazy_walker_fn(game_state),
+        Pathfinder::StepWalker => step_walker_fn(game_state),
+    }
+}
 
 fn lazy_walker_fn(game_state: &GameState) -> Direction {
     let plane_of_direction = plane_of_direction(&game_state.player_state.player_direction);
