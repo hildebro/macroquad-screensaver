@@ -33,6 +33,15 @@ async fn main() {
             game_state.draw();
         }
 
+        // Draw fps here so that you don't see it, when crate is used as lib.
+        draw_text(
+            &macroquad::time::get_fps().to_string(),
+            50.0,
+            50.0,
+            40.0,
+            WHITE,
+        );
+
         next_frame().await
     }
 }

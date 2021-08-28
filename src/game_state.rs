@@ -1,8 +1,8 @@
 use macroquad::prelude::*;
 
 use crate::constants::*;
-use crate::player_state::PlayerState;
 use crate::pathfinder::*;
+use crate::player_state::PlayerState;
 
 pub struct GameState {
     pub width: f32,
@@ -42,12 +42,8 @@ impl GameState {
     }
 
     pub fn draw(&self) {
-        // Draw fps.
-        draw_text(&macroquad::time::get_fps().to_string(), 50.0, 50.0, 40.0, WHITE);
-
         // Draw the player.
         self.player_state.draw();
-
 
         // Draw the char.
         draw_text(
@@ -71,7 +67,8 @@ impl GameState {
 
     pub fn collision_check(&mut self) {
         if self.player_state.player_x_pos() != self.char_x_pos
-            || self.player_state.player_y_pos() != self.char_y_pos {
+            || self.player_state.player_y_pos() != self.char_y_pos
+        {
             // Nothing to do, if there's no collision.
             return;
         }
@@ -81,8 +78,7 @@ impl GameState {
         self.update_char();
     }
 
-    pub fn update_char(&mut self)
-    {
+    pub fn update_char(&mut self) {
         // New location.
         let (char_x_pos, char_y_pos) = new_char_pos(self.width, self.height);
         self.char_x_pos = char_x_pos;
@@ -108,13 +104,15 @@ impl GameState {
             self.player_state.set_player_x_pos(0.0);
         }
         if self.player_state.player_x_pos() < 0.0 {
-            self.player_state.set_player_x_pos(self.width - FONT_SIZE / 2.0);
+            self.player_state
+                .set_player_x_pos(self.width - FONT_SIZE / 2.0);
         }
         if self.player_state.player_y_pos() >= self.height {
             self.player_state.set_player_y_pos(0.0);
         }
         if self.player_state.player_y_pos() < 0.0 {
-            self.player_state.set_player_y_pos(self.height - FONT_SIZE / 2.0);
+            self.player_state
+                .set_player_y_pos(self.height - FONT_SIZE / 2.0);
         }
     }
 
