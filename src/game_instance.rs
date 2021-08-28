@@ -118,7 +118,7 @@ impl GameInstance {
         }
     }
 
-    pub fn new() -> GameInstance {
+    pub fn new(pathfinder: Pathfinder) -> GameInstance {
         let width = macroquad::window::screen_width();
         let height = macroquad::window::screen_height();
 
@@ -131,7 +131,7 @@ impl GameInstance {
             char_y_pos,
             char_index: 1,
             player_state: PlayerState::new(),
-            pathfinder: Pathfinder::LazyWalker,
+            pathfinder,
         }
     }
 }

@@ -1,7 +1,7 @@
 use crate::constants::*;
 use crate::game_instance::GameInstance;
 
-#[derive(PartialEq)]
+#[derive(PartialEq, Copy, Clone)]
 pub enum Pathfinder {
     // Keeps going in one direction until aligned with the collectible. Then turn towards it.
     LazyWalker,
