@@ -9,19 +9,14 @@ pub enum Pathfinder {
     StepWalker,
 }
 
-pub enum PathfinderResult {
-    KeepGoing,
-    NewDirection(Direction),
-}
-
-type PathfinderFn = fn(&GameState) -> PathfinderResult;
+type PathfinderFn = fn(&GameState) -> Direction;
 
 pub static PATHFINDER_MAPPING: &'static [(Pathfinder, PathfinderFn)] = &[
     (Pathfinder::LazyWalker, lazy_walker_fn),
     (Pathfinder::StepWalker, step_walker_fn),
 ];
 
-fn lazy_walker_fn(game_state: &GameState) -> PathfinderResult {
+fn lazy_walker_fn(game_state: &GameState) -> Direction {
     let plane_of_direction = plane_of_direction(&game_state.player_state.player_direction);
     let player_x_pos = game_state.player_state.player_x_pos();
     let player_y_pos = game_state.player_state.player_y_pos();
@@ -29,34 +24,34 @@ fn lazy_walker_fn(game_state: &GameState) -> PathfinderResult {
     if player_x_pos != game_state.char_x_pos && plane_of_direction == Plane::Horizontal {
         // If we aren't aligned with the collectible horizontally while traversing the horizontal
         // plane, just keep going.
-        return PathfinderResult::KeepGoing;
+        return game_state.player_state.player_direction;
     }
 
     if player_y_pos != game_state.char_y_pos && plane_of_direction == Plane::Vertical {
         // If we aren't aligned with the collectible vertically while traversing the vertical plane,
         // just keep going.
-        return PathfinderResult::KeepGoing;
+        return game_state.player_state.player_direction;
     }
 
     // At this point, we know that we need to change direction.
     return if player_x_pos == game_state.char_x_pos {
         // Horizontally aligned, so we need to either go north or south.
         if player_y_pos < game_state.char_y_pos {
-            PathfinderResult::NewDirection(Direction::South)
+            Direction::South
         } else {
-            PathfinderResult::NewDirection(Direction::North)
+            Direction::North
         }
     } else {
         // Vertically aligned, so we need to either go west or east.
         if player_x_pos < game_state.char_x_pos {
-            PathfinderResult::NewDirection(Direction::East)
+            Direction::East
         } else {
-            PathfinderResult::NewDirection(Direction::West)
+            Direction::West
         }
     };
 }
 
-fn step_walker_fn(game_state: &GameState) -> PathfinderResult {
+fn step_walker_fn(game_state: &GameState) -> Direction {
     let player_x_pos = game_state.player_state.player_x_pos();
     let player_y_pos = game_state.player_state.player_y_pos();
     let char_x_pos = game_state.char_x_pos;
@@ -64,37 +59,29 @@ fn step_walker_fn(game_state: &GameState) -> PathfinderResult {
 
     return if player_x_pos == char_x_pos {
         // The player is aligned horizontally, so just pick the correct vertical direction.
-        PathfinderResult::NewDirection(get_optimal_direction(
-            player_y_pos,
-            char_y_pos,
-            game_state.height,
-            Plane::Vertical,
-        ))
+        get_optimal_direction(player_y_pos, char_y_pos, game_state.height, Plane::Vertical)
     } else if player_y_pos == char_y_pos {
         // The player is aligned vertically, so just pick the correct horizontal direction.
-        PathfinderResult::NewDirection(get_optimal_direction(
+        get_optimal_direction(
             player_x_pos,
             char_x_pos,
             game_state.width,
             Plane::Horizontal,
-        ))
+        )
     } else {
         // Not aligned at all, so there are two valid directions to take at this point. We don't
         // want to continue on the current direction, so we switch based on that.
         let plane = plane_of_direction(&game_state.player_state.player_direction);
         match plane {
-            Plane::Vertical => PathfinderResult::NewDirection(get_optimal_direction(
+            Plane::Vertical => get_optimal_direction(
                 player_x_pos,
                 char_x_pos,
                 game_state.width,
                 Plane::Horizontal,
-            )),
-            Plane::Horizontal => PathfinderResult::NewDirection(get_optimal_direction(
-                player_y_pos,
-                char_y_pos,
-                game_state.height,
-                Plane::Vertical,
-            )),
+            ),
+            Plane::Horizontal => {
+                get_optimal_direction(player_y_pos, char_y_pos, game_state.height, Plane::Vertical)
+            }
         }
     };
 }

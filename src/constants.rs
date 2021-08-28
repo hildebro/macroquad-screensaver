@@ -10,6 +10,7 @@ pub const PLAYER_MOVE_INTERVAL: f64 = 0.03;
 
 pub const FONT_SIZE: f32 = 24.0;
 
+#[derive(Clone, Copy)]
 pub enum Direction {
     North,
     South,

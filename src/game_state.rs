@@ -46,14 +46,9 @@ impl GameState {
             }
 
             let pathfinder_fn = pathfinder_tuple.1;
-            let pathfinder_result = pathfinder_fn(self);
-            match pathfinder_result {
-                PathfinderResult::KeepGoing => {}
-                PathfinderResult::NewDirection(direction) => {
-                    self.player_state.player_direction = direction;
-                    self.player_state.direction_switch_since_move = true;
-                }
-            }
+            let pathfinder_direction = pathfinder_fn(self);
+            self.player_state.player_direction = pathfinder_direction;
+            self.player_state.direction_switch_since_move = true;
         }
     }
 
