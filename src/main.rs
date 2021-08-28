@@ -2,12 +2,9 @@ use std::time::{SystemTime, UNIX_EPOCH};
 
 use macroquad::prelude::*;
 
-use game_state::GameState;
+use roflcopter_lib::game_state::GameState;
 
-mod game_state;
-mod constants;
-mod player_state;
-mod pathfinder;
+pub const INSTANCE_COUNT: usize = 750;
 
 fn window_conf() -> Conf {
     Conf {
@@ -26,7 +23,7 @@ async fn main() {
     rand::srand(current_millisecond.as_secs());
 
     let mut game_instances: Vec<GameState> = Vec::new();
-    for _ in 0..constants::INSTANCE_COUNT {
+    for _ in 0..INSTANCE_COUNT {
         game_instances.push(GameState::new())
     }
 

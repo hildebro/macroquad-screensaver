@@ -3,5 +3,13 @@ name = "roflcopter"
 version = "0.1.0"
 edition = "2018"
 
+[lib]
+name = "roflcopter_lib"
+path = "src/lib.rs"
+
+[[bin]]
+name = "roflcopter"
+path = "src/main.rs"
+
 [dependencies]
 macroquad = "0.3"

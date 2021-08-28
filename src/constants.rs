@@ -8,8 +8,6 @@ pub const PLAYER_START_Y_POS: f32 = 24.0;
 
 pub const PLAYER_MOVE_INTERVAL: f64 = 0.03;
 
-pub const INSTANCE_COUNT: usize = 750;
-
 pub const FONT_SIZE: f32 = 24.0;
 
 pub enum Direction {
@@ -22,15 +20,15 @@ pub enum Direction {
 #[derive(PartialEq)]
 pub enum Plane {
     Vertical,
-    Horizontal
+    Horizontal,
 }
 
 pub fn plane_of_direction(direction: &Direction) -> Plane {
     match direction {
-        Direction::North => {Plane::Vertical}
-        Direction::South => {Plane::Vertical}
-        Direction::West => {Plane::Horizontal}
-        Direction::East => {Plane::Horizontal}
+        Direction::North => Plane::Vertical,
+        Direction::South => Plane::Vertical,
+        Direction::West => Plane::Horizontal,
+        Direction::East => Plane::Horizontal,
     }
 }
 
