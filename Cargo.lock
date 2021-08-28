@@ -326,7 +326,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "roflcopter"
+name = "roflcopter_snake"
 version = "0.1.0"
 dependencies = [
  "macroquad",

@@ -1,14 +1,14 @@
 [package]
-name = "roflcopter"
+name = "roflcopter_snake"
 version = "0.1.0"
 edition = "2018"
 
 [lib]
-name = "roflcopter_lib"
+name = "roflcopter_snake_lib"
 path = "src/lib.rs"
 
 [[bin]]
-name = "roflcopter"
+name = "roflcopter_snake"
 path = "src/main.rs"
 
 [dependencies]
