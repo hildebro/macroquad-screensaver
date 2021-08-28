@@ -4,7 +4,7 @@ use crate::constants::*;
 use crate::pathfinder::*;
 use crate::player_state::PlayerState;
 
-pub struct GameState {
+pub struct GameInstance {
     pub width: f32,
     pub height: f32,
     pub char_x_pos: f32,
@@ -15,7 +15,7 @@ pub struct GameState {
     pub pathfinder: Pathfinder,
 }
 
-impl GameState {
+impl GameInstance {
     pub fn update(&mut self) {
         self.update_absolute_size();
         self.update_pathfinder();
@@ -118,13 +118,13 @@ impl GameState {
         }
     }
 
-    pub fn new() -> GameState {
+    pub fn new() -> GameInstance {
         let width = macroquad::window::screen_width();
         let height = macroquad::window::screen_height();
 
         let (char_x_pos, char_y_pos) = new_char_pos(width, height);
 
-        GameState {
+        GameInstance {
             width,
             height,
             char_x_pos,

@@ -1,7 +1,7 @@
 use std::time::{SystemTime, UNIX_EPOCH};
 
 use macroquad::prelude::*;
-use roflcopter_snake_lib::game_state::GameState;
+use roflcopter_snake_lib::game_instance::GameInstance;
 
 pub const INSTANCE_COUNT: usize = 500;
 
@@ -21,15 +21,15 @@ async fn main() {
         .expect("Unable to read systemt time.");
     rand::srand(current_millisecond.as_secs());
 
-    let mut game_instances: Vec<GameState> = Vec::new();
+    let mut game_instances: Vec<GameInstance> = Vec::new();
     for _ in 0..INSTANCE_COUNT {
-        game_instances.push(GameState::new())
+        game_instances.push(GameInstance::new())
     }
 
     loop {
-        for game_state in &mut game_instances {
-            game_state.update();
-            game_state.draw();
+        for game_instance in &mut game_instances {
+            game_instance.update();
+            game_instance.draw();
         }
 
         // Draw fps here so that you don't see it, when crate is used as lib.
