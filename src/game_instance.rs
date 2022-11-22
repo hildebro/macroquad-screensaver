@@ -25,7 +25,7 @@ impl GameInstance {
     }
 
     fn update_pathfinder(&mut self) {
-        if macroquad::input::is_mouse_button_pressed(MouseButton::Left) {
+        if is_mouse_button_pressed(MouseButton::Left) {
             match self.pathfinder {
                 Pathfinder::LazyWalker => self.pathfinder = Pathfinder::StepWalker,
                 Pathfinder::StepWalker => self.pathfinder = Pathfinder::LazyWalker,
@@ -59,8 +59,8 @@ impl GameInstance {
 
     /// Update width and height in case the user resizes the window.
     pub fn update_absolute_size(&mut self) {
-        self.width = macroquad::window::screen_width();
-        self.height = macroquad::window::screen_height();
+        self.width = screen_width();
+        self.height = screen_height();
     }
 
     pub fn char_to_render(&self) -> &str {
@@ -119,8 +119,8 @@ impl GameInstance {
     }
 
     pub fn new(pathfinder: Pathfinder) -> GameInstance {
-        let width = macroquad::window::screen_width();
-        let height = macroquad::window::screen_height();
+        let width = screen_width();
+        let height = screen_height();
 
         let (char_x_pos, char_y_pos) = new_char_pos(width, height);
 
