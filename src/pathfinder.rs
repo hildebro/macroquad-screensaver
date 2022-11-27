@@ -62,7 +62,7 @@ fn step_walker_fn(game_instance: &GameInstance) -> Direction {
         get_optimal_direction(
             player_y_pos,
             char_y_pos,
-            game_instance.height,
+            game_instance.game_config.vertical_slots,
             Plane::Vertical,
         )
     } else if player_y_pos == char_y_pos {
@@ -70,7 +70,7 @@ fn step_walker_fn(game_instance: &GameInstance) -> Direction {
         get_optimal_direction(
             player_x_pos,
             char_x_pos,
-            game_instance.width,
+            game_instance.game_config.horizontal_slots,
             Plane::Horizontal,
         )
     } else {
@@ -81,13 +81,13 @@ fn step_walker_fn(game_instance: &GameInstance) -> Direction {
             Plane::Vertical => get_optimal_direction(
                 player_x_pos,
                 char_x_pos,
-                game_instance.width,
+                game_instance.game_config.horizontal_slots,
                 Plane::Horizontal,
             ),
             Plane::Horizontal => get_optimal_direction(
                 player_y_pos,
                 char_y_pos,
-                game_instance.height,
+                game_instance.game_config.vertical_slots,
                 Plane::Vertical,
             ),
         }
@@ -95,19 +95,19 @@ fn step_walker_fn(game_instance: &GameInstance) -> Direction {
 }
 
 /// Decides, whether traversal over the edge of the screen is quicker than line-of-sight direction.
-fn get_optimal_direction(start: f32, target: f32, total: f32, plane: Plane) -> Direction {
+fn get_optimal_direction(start: i32, target: i32, total: i32, plane: Plane) -> Direction {
     let distance = start - target;
 
     let (line_of_sight_direction, over_edge_direction) = match plane {
         Plane::Vertical => {
-            if distance < 0.0 {
+            if distance < 0 {
                 (Direction::South, Direction::North)
             } else {
                 (Direction::North, Direction::South)
             }
         }
         Plane::Horizontal => {
-            if distance < 0.0 {
+            if distance < 0 {
                 (Direction::East, Direction::West)
             } else {
                 (Direction::West, Direction::East)
@@ -115,7 +115,7 @@ fn get_optimal_direction(start: f32, target: f32, total: f32, plane: Plane) -> D
         }
     };
 
-    if (total - distance.abs()) > (total / 2.0) {
+    if (total - distance.abs()) > (total / 2) {
         line_of_sight_direction
     } else {
         over_edge_direction

@@ -1,15 +1,16 @@
 use macroquad::prelude::*;
 
 use crate::constants::*;
+use crate::game_config::GameConfig;
 use crate::pathfinder::*;
 use crate::player_state::PlayerState;
 
 pub struct GameInstance {
-    pub width: f32,
-    pub height: f32,
-    pub char_x_pos: f32,
-    pub char_y_pos: f32,
-    // The char index of ROFLCOPTER to render.
+    pub game_config: GameConfig,
+    // The position of the char to get next.
+    pub char_x_pos: i32,
+    pub char_y_pos: i32,
+    // The char index of `ROFLCOPTER` to render.
     pub char_index: usize,
     pub player_state: PlayerState,
     pub pathfinder: Pathfinder,
@@ -17,7 +18,6 @@ pub struct GameInstance {
 
 impl GameInstance {
     pub fn update(&mut self) {
-        self.update_absolute_size();
         self.update_pathfinder();
         self.update_player_direction();
         self.move_player();
@@ -44,23 +44,27 @@ impl GameInstance {
     }
 
     pub fn draw(&self) {
+        // get potential font sizes based on absolute size and slots.
+        let font_size_by_width = screen_width() / self.game_config.horizontal_slots as f32;
+        let font_size_by_height = screen_height() / self.game_config.vertical_slots as f32;
+        // use the smaller option of the two to ensure it fits the screen.
+        let font_size = font_size_by_width.min(font_size_by_height);
+
+        // get absolute positions for the char.
+        let abs_char_x_pos = self.char_x_pos as f32 * font_size;
+        let abs_char_y_pos = self.char_y_pos as f32 * font_size;
+
         // Draw the player.
-        self.player_state.draw();
+        self.player_state.draw(font_size);
 
         // Draw the char.
         draw_text(
             self.char_to_render(),
-            self.char_x_pos,
-            self.char_y_pos,
-            FONT_SIZE,
+            abs_char_x_pos,
+            abs_char_y_pos,
+            font_size,
             self.player_state.color,
         );
-    }
-
-    /// Update width and height in case the user resizes the window.
-    pub fn update_absolute_size(&mut self) {
-        self.width = screen_width();
-        self.height = screen_height();
     }
 
     pub fn char_to_render(&self) -> &str {
@@ -82,9 +86,8 @@ impl GameInstance {
 
     pub fn update_char(&mut self) {
         // New location.
-        let (char_x_pos, char_y_pos) = new_char_pos(self.width, self.height);
-        self.char_x_pos = char_x_pos;
-        self.char_y_pos = char_y_pos;
+        self.char_x_pos = rand::gen_range(0, self.game_config.horizontal_slots);
+        self.char_y_pos = rand::gen_range(0, self.game_config.vertical_slots);
 
         // New char to render.
         if self.char_index < 9 {
@@ -102,31 +105,28 @@ impl GameInstance {
         }
 
         // Jump to the other side, if the player hits the edge.
-        if self.player_state.player_x_pos() >= self.width {
-            self.player_state.set_player_x_pos(0.0);
+        if self.player_state.player_x_pos() >= self.game_config.horizontal_slots {
+            self.player_state.set_player_x_pos(0);
         }
-        if self.player_state.player_x_pos() < 0.0 {
+        if self.player_state.player_x_pos() < 0 {
             self.player_state
-                .set_player_x_pos(self.width - FONT_SIZE / 2.0);
+                .set_player_x_pos(self.game_config.horizontal_slots - 1);
         }
-        if self.player_state.player_y_pos() >= self.height {
-            self.player_state.set_player_y_pos(0.0);
+        if self.player_state.player_y_pos() >= self.game_config.vertical_slots {
+            self.player_state.set_player_y_pos(0);
         }
-        if self.player_state.player_y_pos() < 0.0 {
+        if self.player_state.player_y_pos() < 0 {
             self.player_state
-                .set_player_y_pos(self.height - FONT_SIZE / 2.0);
+                .set_player_y_pos(self.game_config.vertical_slots - 1);
         }
     }
 
-    pub fn new(pathfinder: Pathfinder) -> GameInstance {
-        let width = screen_width();
-        let height = screen_height();
-
-        let (char_x_pos, char_y_pos) = new_char_pos(width, height);
+    pub fn new(pathfinder: Pathfinder, game_config: GameConfig) -> GameInstance {
+        let char_x_pos = rand::gen_range(0, game_config.horizontal_slots);
+        let char_y_pos = rand::gen_range(0, game_config.vertical_slots);
 
         GameInstance {
-            width,
-            height,
+            game_config,
             char_x_pos,
             char_y_pos,
             char_index: 1,
