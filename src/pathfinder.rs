@@ -1,7 +1,8 @@
+use serde::{Deserialize, Serialize};
 use crate::constants::*;
 use crate::game_instance::GameInstance;
 
-#[derive(PartialEq, Copy, Clone)]
+#[derive(Serialize, Deserialize, PartialEq, Copy, Clone)]
 pub enum Pathfinder {
     // Keeps going in one direction until aligned with the collectible. Then turn towards it.
     LazyWalker,

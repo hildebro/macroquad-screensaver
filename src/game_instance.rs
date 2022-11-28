@@ -121,7 +121,7 @@ impl GameInstance {
         }
     }
 
-    pub fn new(pathfinder: Pathfinder, game_config: GameConfig) -> GameInstance {
+    pub fn new(game_config: GameConfig) -> GameInstance {
         let char_x_pos = rand::gen_range(0, game_config.horizontal_slots);
         let char_y_pos = rand::gen_range(0, game_config.vertical_slots);
 
@@ -131,7 +131,7 @@ impl GameInstance {
             char_y_pos,
             char_index: 1,
             player_state: PlayerState::new(),
-            pathfinder,
+            pathfinder: game_config.pathfinder,
         }
     }
 }
