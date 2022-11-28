@@ -1,12 +1,12 @@
 use macroquad::prelude::*;
 
 use crate::constants::*;
-use crate::game_config::GameConfig;
 use crate::pathfinder::*;
 use crate::player_state::PlayerState;
+use crate::snake_config::SnakeConfig;
 
-pub struct GameInstance {
-    pub game_config: GameConfig,
+pub struct SnakeGame {
+    pub snake_config: SnakeConfig,
     // The position of the char to get next.
     pub char_x_pos: i32,
     pub char_y_pos: i32,
@@ -16,7 +16,7 @@ pub struct GameInstance {
     pub pathfinder: Pathfinder,
 }
 
-impl GameInstance {
+impl SnakeGame {
     pub fn update(&mut self) {
         self.update_pathfinder();
         self.update_player_direction();
@@ -45,8 +45,8 @@ impl GameInstance {
 
     pub fn draw(&self) {
         // get potential font sizes based on absolute size and slots.
-        let font_size_by_width = screen_width() / self.game_config.horizontal_slots as f32;
-        let font_size_by_height = screen_height() / self.game_config.vertical_slots as f32;
+        let font_size_by_width = screen_width() / self.snake_config.horizontal_slots as f32;
+        let font_size_by_height = screen_height() / self.snake_config.vertical_slots as f32;
         // use the smaller option of the two to ensure it fits the screen.
         let font_size = font_size_by_width.min(font_size_by_height);
 
@@ -86,8 +86,8 @@ impl GameInstance {
 
     pub fn update_char(&mut self) {
         // New location.
-        self.char_x_pos = rand::gen_range(0, self.game_config.horizontal_slots);
-        self.char_y_pos = rand::gen_range(0, self.game_config.vertical_slots);
+        self.char_x_pos = rand::gen_range(0, self.snake_config.horizontal_slots);
+        self.char_y_pos = rand::gen_range(0, self.snake_config.vertical_slots);
 
         // New char to render.
         if self.char_index < 9 {
@@ -105,33 +105,33 @@ impl GameInstance {
         }
 
         // Jump to the other side, if the player hits the edge.
-        if self.player_state.player_x_pos() >= self.game_config.horizontal_slots {
+        if self.player_state.player_x_pos() >= self.snake_config.horizontal_slots {
             self.player_state.set_player_x_pos(0);
         }
         if self.player_state.player_x_pos() < 0 {
             self.player_state
-                .set_player_x_pos(self.game_config.horizontal_slots - 1);
+                .set_player_x_pos(self.snake_config.horizontal_slots - 1);
         }
-        if self.player_state.player_y_pos() >= self.game_config.vertical_slots {
+        if self.player_state.player_y_pos() >= self.snake_config.vertical_slots {
             self.player_state.set_player_y_pos(0);
         }
         if self.player_state.player_y_pos() < 0 {
             self.player_state
-                .set_player_y_pos(self.game_config.vertical_slots - 1);
+                .set_player_y_pos(self.snake_config.vertical_slots - 1);
         }
     }
 
-    pub fn new(game_config: GameConfig) -> GameInstance {
-        let char_x_pos = rand::gen_range(0, game_config.horizontal_slots);
-        let char_y_pos = rand::gen_range(0, game_config.vertical_slots);
+    pub fn new(snake_config: SnakeConfig) -> SnakeGame {
+        let char_x_pos = rand::gen_range(0, snake_config.horizontal_slots);
+        let char_y_pos = rand::gen_range(0, snake_config.vertical_slots);
 
-        GameInstance {
-            game_config,
+        SnakeGame {
+            snake_config,
             char_x_pos,
             char_y_pos,
             char_index: 1,
             player_state: PlayerState::new(),
-            pathfinder: game_config.pathfinder,
+            pathfinder: snake_config.pathfinder,
         }
     }
 }

@@ -1,8 +1,8 @@
 #![feature(fs_try_exists)]
 
 mod constants;
-mod game_config;
-mod game_instance;
-pub mod game_state;
 mod pathfinder;
 mod player_state;
+pub mod snake_game_collection;
+mod snake_config;
+mod snake_game;

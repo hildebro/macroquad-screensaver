@@ -2,11 +2,11 @@ use std::time::{SystemTime, UNIX_EPOCH};
 
 use macroquad::prelude::*;
 
-use roflcopter_snake_lib::game_state::GameState;
+use roflcopter_snake_lib::snake_game_collection::SnakeGameCollection;
 
 fn window_conf() -> Conf {
     Conf {
-        window_title: "Roflcopter".to_owned(),
+        window_title: "Roflcopter Snake".to_owned(),
         fullscreen: true,
         ..Default::default()
     }
@@ -20,11 +20,12 @@ async fn main() {
         .expect("Unable to read system time.");
     rand::srand(current_millisecond.as_secs());
 
-    let mut game_state = GameState::new();
+    // Generate a new collection of snake games.
+    let mut snake_game_collection = SnakeGameCollection::new();
 
     loop {
-        game_state.update();
-        game_state.draw();
+        snake_game_collection.update();
+        snake_game_collection.draw();
 
         // Draw fps outside of game state so that it's not rendered, when the crate is used as lib.
         draw_text(&get_fps().to_string(), 50.0, 50.0, 40.0, WHITE);
