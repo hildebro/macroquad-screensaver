@@ -1,4 +1,6 @@
-#[derive(Copy, Clone)]
+use serde::{Serialize, Deserialize};
+
+#[derive(Serialize, Deserialize, PartialEq, Debug, Copy, Clone)]
 pub struct GameConfig {
     // How many games will run consecutively.
     pub instance_count: i32,
