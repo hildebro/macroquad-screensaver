@@ -1,3 +1,4 @@
+use crate::game_config::GameConfig;
 use crate::game_instance::GameInstance;
 
 pub struct GameState {
@@ -5,7 +6,15 @@ pub struct GameState {
 }
 
 impl GameState {
-    pub fn new(game_instances: Vec<GameInstance>) -> Self {
+    pub fn new() -> Self {
+        let game_config = GameConfig::get_config();
+
+        // Build game instances based on the specified amount from the game config.
+        let mut game_instances = Vec::new();
+        for _ in 0..game_config.instance_count {
+            game_instances.push(GameInstance::new(game_config));
+        }
+
         GameState { game_instances }
     }
 

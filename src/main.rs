@@ -2,7 +2,7 @@ use std::time::{SystemTime, UNIX_EPOCH};
 
 use macroquad::prelude::*;
 
-use roflcopter_snake_lib::game_state_factory::*;
+use roflcopter_snake_lib::game_state::GameState;
 
 fn window_conf() -> Conf {
     Conf {
@@ -20,7 +20,7 @@ async fn main() {
         .expect("Unable to read system time.");
     rand::srand(current_millisecond.as_secs());
 
-    let mut game_state = build_game_state();
+    let mut game_state = GameState::new();
 
     loop {
         game_state.update();
