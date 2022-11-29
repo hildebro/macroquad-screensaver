@@ -23,29 +23,33 @@ fn lazy_walker_fn(snake_game: &SnakeGame) -> Direction {
     let player_x_pos = snake_game.player_state.player_x_pos();
     let player_y_pos = snake_game.player_state.player_y_pos();
 
-    if player_x_pos != snake_game.char_x_pos && plane_of_direction == Plane::Horizontal {
+    if player_x_pos != snake_game.collectible_state.x_position
+        && plane_of_direction == Plane::Horizontal
+    {
         // If we aren't aligned with the collectible horizontally while traversing the horizontal
         // plane, just keep going.
         return snake_game.player_state.player_direction;
     }
 
-    if player_y_pos != snake_game.char_y_pos && plane_of_direction == Plane::Vertical {
+    if player_y_pos != snake_game.collectible_state.y_position
+        && plane_of_direction == Plane::Vertical
+    {
         // If we aren't aligned with the collectible vertically while traversing the vertical plane,
         // just keep going.
         return snake_game.player_state.player_direction;
     }
 
     // At this point, we know that we need to change direction.
-    return if player_x_pos == snake_game.char_x_pos {
+    return if player_x_pos == snake_game.collectible_state.x_position {
         // Horizontally aligned, so we need to either go north or south.
-        if player_y_pos < snake_game.char_y_pos {
+        if player_y_pos < snake_game.collectible_state.y_position {
             Direction::South
         } else {
             Direction::North
         }
     } else {
         // Vertically aligned, so we need to either go west or east.
-        if player_x_pos < snake_game.char_x_pos {
+        if player_x_pos < snake_game.collectible_state.x_position {
             Direction::East
         } else {
             Direction::West
@@ -56,8 +60,8 @@ fn lazy_walker_fn(snake_game: &SnakeGame) -> Direction {
 fn step_walker_fn(snake_game: &SnakeGame) -> Direction {
     let player_x_pos = snake_game.player_state.player_x_pos();
     let player_y_pos = snake_game.player_state.player_y_pos();
-    let char_x_pos = snake_game.char_x_pos;
-    let char_y_pos = snake_game.char_y_pos;
+    let char_x_pos = snake_game.collectible_state.x_position;
+    let char_y_pos = snake_game.collectible_state.y_position;
 
     return if player_x_pos == char_x_pos {
         // The player is aligned horizontally, so just pick the correct vertical direction.

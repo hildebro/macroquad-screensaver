@@ -1,16 +1,40 @@
-use crate::constants::*;
 use macroquad::prelude::*;
 
+use crate::constants::*;
+use crate::snake_config::SnakeConfig;
+
 pub struct PlayerState {
+    pub snake_config: SnakeConfig,
     pub player_pos: [(i32, i32); 10],
     pub player_direction: Direction,
     pub direction_switch_since_move: bool,
     pub player_last_move_time: f64,
     pub collected_letters: usize,
-    pub color: Color,
 }
 
 impl PlayerState {
+    pub fn move_player(&mut self) {
+        let player_moved = self.attempt_move();
+        if !player_moved {
+            // No need to check for out-of-bounds movement, when no move happened.
+            return;
+        }
+
+        // Jump to the other side, if the player hits the edge.
+        if self.player_x_pos() >= self.snake_config.horizontal_slots {
+            self.set_player_x_pos(0);
+        }
+        if self.player_x_pos() < 0 {
+            self.set_player_x_pos(self.snake_config.horizontal_slots - 1);
+        }
+        if self.player_y_pos() >= self.snake_config.vertical_slots {
+            self.set_player_y_pos(0);
+        }
+        if self.player_y_pos() < 0 {
+            self.set_player_y_pos(self.snake_config.vertical_slots - 1);
+        }
+    }
+
     pub fn attempt_move(&mut self) -> bool {
         let loop_time = get_time();
         if loop_time - self.player_last_move_time <= PLAYER_MOVE_INTERVAL {
@@ -63,7 +87,7 @@ impl PlayerState {
         self.player_pos[0].1 = pos;
     }
 
-    pub fn draw(&self, font_size: f32) {
+    pub fn draw(&self, font_size: f32, color: Color) {
         // draw every collected letter at their current position.
         for i in 0..=self.collected_letters {
             let abs_letter_x_pos = self.player_pos[i].0 as f32 * font_size;
@@ -74,17 +98,23 @@ impl PlayerState {
                 abs_letter_x_pos,
                 abs_letter_y_pos,
                 font_size,
-                self.color,
+                color,
             );
         }
     }
 
-    pub fn new() -> PlayerState {
-        let r = rand::gen_range(0.5, 1.0);
-        let g = rand::gen_range(0.5, 1.0);
-        let b = rand::gen_range(0.5, 1.0);
+    pub fn update(&mut self, new_direction: Direction) {
+        if !self.direction_switch_since_move {
+            self.player_direction = new_direction;
+            self.direction_switch_since_move = true;
+        }
 
+        self.move_player();
+    }
+
+    pub fn new(snake_config: SnakeConfig) -> PlayerState {
         PlayerState {
+            snake_config,
             player_pos: [
                 // Start the snake `expanded` even though the characters aren't visible yet.
                 // In the future, the should all be on the head position and only expand once
@@ -104,7 +134,6 @@ impl PlayerState {
             direction_switch_since_move: false,
             player_last_move_time: get_time(),
             collected_letters: 0,
-            color: Color::new(r, g, b, 1.0),
         }
     }
 }

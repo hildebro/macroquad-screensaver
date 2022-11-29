@@ -15,7 +15,7 @@ impl SnakeGameCollection {
             snake_games.push(SnakeGame::new(snake_config));
         }
 
-        SnakeGameCollection { snake_games: snake_games }
+        SnakeGameCollection { snake_games }
     }
 
     pub fn update(&mut self) {
