@@ -1,7 +1,10 @@
+use macroquad::prelude::{draw_text, get_fps, WHITE};
+
 use crate::snake_config::SnakeConfig;
 use crate::snake_game::SnakeGame;
 
 pub struct SnakeGameCollection {
+    snake_config: SnakeConfig,
     snake_games: Vec<SnakeGame>,
 }
 
@@ -15,7 +18,10 @@ impl SnakeGameCollection {
             snake_games.push(SnakeGame::new(snake_config));
         }
 
-        SnakeGameCollection { snake_games }
+        SnakeGameCollection {
+            snake_config,
+            snake_games,
+        }
     }
 
     pub fn update(&mut self) {
@@ -27,6 +33,10 @@ impl SnakeGameCollection {
     pub fn draw(&self) {
         for snake_game in &self.snake_games {
             snake_game.draw();
+        }
+
+        if self.snake_config.draw_fps {
+            draw_text(&get_fps().to_string(), 50.0, 50.0, 40.0, WHITE);
         }
     }
 }

@@ -26,10 +26,6 @@ async fn main() {
     loop {
         snake_game_collection.update();
         snake_game_collection.draw();
-
-        // Draw fps outside of game state so that it's not rendered, when the crate is used as lib.
-        draw_text(&get_fps().to_string(), 50.0, 50.0, 40.0, WHITE);
-
         next_frame().await
     }
 }

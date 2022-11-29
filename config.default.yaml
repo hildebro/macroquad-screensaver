@@ -2,3 +2,4 @@ instance_count: 100
 horizontal_slots: 80
 vertical_slots: 45
 pathfinder: LazyWalker
+draw_fps: false

@@ -14,6 +14,8 @@ pub struct SnakeConfig {
     pub vertical_slots: i32,
     // Which pathfinder to use for the snake.
     pub pathfinder: Pathfinder,
+    // Whether to draw the fps counter in the corner of the screen
+    pub draw_fps: bool,
 }
 
 impl SnakeConfig {
