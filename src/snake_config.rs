@@ -3,7 +3,7 @@ use std::fs;
 use serde::{Deserialize, Serialize};
 
 use crate::constants::StartingPosition;
-use crate::pathfinder::Pathfinder;
+use crate::player::Pathfinder;
 
 #[derive(Serialize, Deserialize, PartialEq, Copy, Clone)]
 pub struct SnakeConfig {

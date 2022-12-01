@@ -2,7 +2,7 @@
 
 mod collectible_state;
 mod constants;
-mod pathfinder;
+mod player;
 mod player_state;
 mod snake_config;
 mod snake_game;
