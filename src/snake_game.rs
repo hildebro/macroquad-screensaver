@@ -15,6 +15,7 @@ pub struct SnakeGame {
 
 impl SnakeGame {
     pub fn update(&mut self) {
+        // Always check for a pathfinder update.
         self.update_pathfinder();
         let new_direction = find_path(self);
 
@@ -22,6 +23,7 @@ impl SnakeGame {
         self.collision_check();
     }
 
+    /// Updates the pathfinder, if the user clicks the left mouse button.
     fn update_pathfinder(&mut self) {
         if is_mouse_button_pressed(MouseButton::Left) {
             match self.pathfinder {

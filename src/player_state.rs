@@ -1,6 +1,7 @@
 use macroquad::prelude::*;
 
 use crate::constants::*;
+use crate::player::move_player;
 use crate::snake_config::SnakeConfig;
 
 pub struct PlayerState {
@@ -8,61 +9,10 @@ pub struct PlayerState {
     // x and y position of every part of the snake.
     pub player_parts: Vec<(i32, i32)>,
     pub player_direction: Direction,
-    pub direction_switch_since_move: bool,
     pub player_last_move_time: f64,
 }
 
 impl PlayerState {
-    pub fn move_player(&mut self) {
-        let player_moved = self.attempt_move();
-        if !player_moved {
-            // No need to check for out-of-bounds movement, when no move happened.
-            return;
-        }
-
-        // Jump to the other side, if the player hits the edge.
-        if self.player_x_pos() >= self.snake_config.horizontal_slots {
-            self.set_player_x_pos(0);
-        }
-        if self.player_x_pos() < 0 {
-            self.set_player_x_pos(self.snake_config.horizontal_slots - 1);
-        }
-        if self.player_y_pos() >= self.snake_config.vertical_slots {
-            self.set_player_y_pos(0);
-        }
-        if self.player_y_pos() < 0 {
-            self.set_player_y_pos(self.snake_config.vertical_slots - 1);
-        }
-    }
-
-    pub fn attempt_move(&mut self) -> bool {
-        let loop_time = get_time();
-        if loop_time - self.player_last_move_time <= PLAYER_MOVE_INTERVAL {
-            // Don't move unless a bit of time has passed since the last move.
-            return false;
-        }
-
-        // Reset the compare time.
-        self.player_last_move_time = loop_time;
-        // Reset direction switcher.
-        self.direction_switch_since_move = false;
-
-        // Move all body parts one step closer to the head.
-        for i in (0..self.player_parts.len() - 1).rev() {
-            self.player_parts[i + 1] = self.player_parts[i];
-        }
-
-        // Move the head to a new position.
-        match self.player_direction {
-            Direction::West => self.set_player_x_pos(self.player_x_pos() - 1),
-            Direction::East => self.set_player_x_pos(self.player_x_pos() + 1),
-            Direction::North => self.set_player_y_pos(self.player_y_pos() - 1),
-            Direction::South => self.set_player_y_pos(self.player_y_pos() + 1),
-        }
-
-        return true;
-    }
-
     pub fn register_collision(&mut self) {
         if self.player_parts.len() >= ROFLCOPTER.len() {
             // If the player already collected all parts of ROFLCOPTER, the player is reverted back
@@ -112,12 +62,18 @@ impl PlayerState {
     }
 
     pub fn update(&mut self, new_direction: Direction) {
-        if !self.direction_switch_since_move {
-            self.player_direction = new_direction;
-            self.direction_switch_since_move = true;
+        let loop_time = get_time();
+        if loop_time - self.player_last_move_time <= PLAYER_MOVE_INTERVAL {
+            // Don't move unless a bit of time has passed since the last move.
+            return;
         }
 
-        self.move_player();
+        // Set new direction.
+        self.player_direction = new_direction;
+        // Move the player
+        move_player(self);
+        // Reset the compare time.
+        self.player_last_move_time = loop_time;
     }
 
     pub fn new(snake_config: SnakeConfig) -> PlayerState {
@@ -139,7 +95,6 @@ impl PlayerState {
             player_parts,
             // Setting an arbitrary direction, because it will be overridden anyway.
             player_direction: Direction::East,
-            direction_switch_since_move: false,
             player_last_move_time: get_time(),
         }
     }
