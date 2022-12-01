@@ -5,11 +5,11 @@ use crate::snake_config::SnakeConfig;
 
 pub struct PlayerState {
     pub snake_config: SnakeConfig,
-    pub player_pos: [(i32, i32); 10],
+    // x and y position of every part of the snake.
+    pub player_parts: Vec<(i32, i32)>,
     pub player_direction: Direction,
     pub direction_switch_since_move: bool,
     pub player_last_move_time: f64,
-    pub collected_letters: usize,
 }
 
 impl PlayerState {
@@ -48,8 +48,8 @@ impl PlayerState {
         self.direction_switch_since_move = false;
 
         // Move all body parts one step closer to the head.
-        for i in (0..self.player_pos.len() - 1).rev() {
-            self.player_pos[i + 1] = self.player_pos[i];
+        for i in (0..self.player_parts.len() - 1).rev() {
+            self.player_parts[i + 1] = self.player_parts[i];
         }
 
         // Move the head to a new position.
@@ -64,42 +64,50 @@ impl PlayerState {
     }
 
     pub fn register_collision(&mut self) {
-        if self.collected_letters < 9 {
-            self.collected_letters += 1;
+        if self.player_parts.len() >= ROFLCOPTER.len() {
+            // If the player already collected all parts of ROFLCOPTER, the player is reverted back
+            // to a single part by creating a new Vec that contains only the head of the snake.
+            self.player_parts = self.player_parts.drain(..1).collect();
         } else {
-            self.collected_letters = 0;
+            // As long as the max length hasn't been reached, we just add a new part.
+            let last_part = self.player_parts.last().unwrap();
+            self.player_parts.push((last_part.0, last_part.1));
         }
     }
 
     pub fn player_x_pos(&self) -> i32 {
-        self.player_pos[0].0
+        self.player_parts[0].0
     }
 
     pub fn set_player_x_pos(&mut self, pos: i32) {
-        self.player_pos[0].0 = pos;
+        self.player_parts[0].0 = pos;
     }
 
     pub fn player_y_pos(&self) -> i32 {
-        self.player_pos[0].1
+        self.player_parts[0].1
     }
 
     pub fn set_player_y_pos(&mut self, pos: i32) {
-        self.player_pos[0].1 = pos;
+        self.player_parts[0].1 = pos;
     }
 
     pub fn draw(&self, font_size: f32, color: Color) {
-        // draw every collected letter at their current position.
-        for i in 0..=self.collected_letters {
-            let abs_letter_x_pos = self.player_pos[i].0 as f32 * font_size;
-            let abs_letter_y_pos = self.player_pos[i].1 as f32 * font_size;
+        // Draw every player part. In order to know, which letter of ROFLCOPTER to draw per part,
+        // an index variable is used that increments after each draw.
+        let mut index = 0;
+        for player_part in self.player_parts.iter() {
+            let abs_letter_x_pos = player_part.0 as f32 * font_size;
+            let abs_letter_y_pos = player_part.1 as f32 * font_size;
 
             draw_text(
-                ROFLCOPTER[i],
+                ROFLCOPTER[index],
                 abs_letter_x_pos,
                 abs_letter_y_pos,
                 font_size,
                 color,
             );
+
+            index += 1;
         }
     }
 
@@ -113,27 +121,15 @@ impl PlayerState {
     }
 
     pub fn new(snake_config: SnakeConfig) -> PlayerState {
+        let mut player_parts = Vec::new();
+        player_parts.push((PLAYER_START_X_POS, PLAYER_START_Y_POS));
+
         PlayerState {
             snake_config,
-            player_pos: [
-                // Start the snake `expanded` even though the characters aren't visible yet.
-                // In the future, the should all be on the head position and only expand once
-                // they are actually collected and visible.
-                (PLAYER_START_X_POS, PLAYER_START_Y_POS),
-                (PLAYER_START_X_POS, PLAYER_START_Y_POS + 1),
-                (PLAYER_START_X_POS, PLAYER_START_Y_POS + 2),
-                (PLAYER_START_X_POS, PLAYER_START_Y_POS + 3),
-                (PLAYER_START_X_POS, PLAYER_START_Y_POS + 4),
-                (PLAYER_START_X_POS, PLAYER_START_Y_POS + 5),
-                (PLAYER_START_X_POS, PLAYER_START_Y_POS + 6),
-                (PLAYER_START_X_POS, PLAYER_START_Y_POS + 7),
-                (PLAYER_START_X_POS, PLAYER_START_Y_POS + 8),
-                (PLAYER_START_X_POS, PLAYER_START_Y_POS + 9),
-            ],
+            player_parts,
             player_direction: Direction::East,
             direction_switch_since_move: false,
             player_last_move_time: get_time(),
-            collected_letters: 0,
         }
     }
 }
