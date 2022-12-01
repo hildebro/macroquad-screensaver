@@ -121,12 +121,23 @@ impl PlayerState {
     }
 
     pub fn new(snake_config: SnakeConfig) -> PlayerState {
-        let mut player_parts = Vec::new();
-        player_parts.push((PLAYER_START_X_POS, PLAYER_START_Y_POS));
+        let starting_position = match snake_config.starting_position {
+            StartingPosition::Corner => (0, 0),
+            StartingPosition::Center => (
+                snake_config.horizontal_slots / 2,
+                snake_config.vertical_slots / 2,
+            ),
+            StartingPosition::Random => (
+                rand::gen_range(0, snake_config.horizontal_slots),
+                rand::gen_range(0, snake_config.vertical_slots),
+            ),
+        };
+        let player_parts = vec![starting_position];
 
         PlayerState {
             snake_config,
             player_parts,
+            // Setting an arbitrary direction, because it will be overridden anyway.
             player_direction: Direction::East,
             direction_switch_since_move: false,
             player_last_move_time: get_time(),

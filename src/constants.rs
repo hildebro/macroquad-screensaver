@@ -1,10 +1,16 @@
+use serde::{Deserialize, Serialize};
+
 // Characters to render.
 pub const ROFLCOPTER: [&'static str; 10] = ["R", "O", "F", "L", "C", "O", "P", "T", "E", "R"];
 
-pub const PLAYER_START_X_POS: i32 = 1;
-pub const PLAYER_START_Y_POS: i32 = 1;
-
 pub const PLAYER_MOVE_INTERVAL: f64 = 0.03;
+
+#[derive(Serialize, Deserialize, PartialEq, Copy, Clone)]
+pub enum StartingPosition {
+    Corner,
+    Center,
+    Random,
+}
 
 #[derive(Clone, Copy)]
 pub enum Direction {
