@@ -1,6 +1,6 @@
 use serde::{Deserialize, Serialize};
 
-use crate::enums::{Direction, Plane, plane_of_direction};
+use crate::enums::{Direction, Plane};
 use crate::snake_config::CONFIG;
 use crate::snake_game::SnakeGame;
 
@@ -20,7 +20,7 @@ pub fn find_path(snake_game: &SnakeGame) -> Direction {
 }
 
 fn lazy_walker_fn(snake_game: &SnakeGame) -> Direction {
-    let plane_of_direction = plane_of_direction(&snake_game.player_state.last_move_direction);
+    let plane_of_direction = Direction::get_plane(&snake_game.player_state.last_move_direction);
     let player_x_pos = snake_game.player_state.player_x_pos();
     let player_y_pos = snake_game.player_state.player_y_pos();
 
@@ -83,7 +83,7 @@ fn step_walker_fn(snake_game: &SnakeGame) -> Direction {
     } else {
         // Not aligned at all, so there are two valid directions to take at this point. We don't
         // want to continue on the current direction, so we switch based on last move.
-        let plane = plane_of_direction(&snake_game.player_state.last_move_direction);
+        let plane = Direction::get_plane(&snake_game.player_state.last_move_direction);
         match plane {
             Plane::Vertical => get_optimal_direction(
                 player_x_pos,
