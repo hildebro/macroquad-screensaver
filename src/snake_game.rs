@@ -71,7 +71,7 @@ impl SnakeGame {
         SnakeGame {
             player_state: PlayerState::new(),
             collectible_state: CollectibleState::new(),
-            pathfinder: CONFIG.pathfinder,
+            pathfinder: CONFIG.pathfinder.clone(),
             color: Color::new(r, g, b, 1.0),
         }
     }

@@ -6,7 +6,7 @@ use serde::{Deserialize, Serialize};
 use crate::constants::StartingPosition;
 use crate::enums::Pathfinder;
 
-#[derive(Serialize, Deserialize, PartialEq, Copy, Clone)]
+#[derive(Serialize, Deserialize)]
 pub struct SnakeConfig {
     // Amount of snake games running consecutively.
     pub instance_count: i32,

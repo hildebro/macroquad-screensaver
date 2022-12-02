@@ -4,7 +4,7 @@ use crate::constants::*;
 use crate::snake_config::CONFIG;
 use crate::snake_game::SnakeGame;
 
-#[derive(Serialize, Deserialize, PartialEq, Copy, Clone)]
+#[derive(Serialize, Deserialize, Clone)]
 pub enum Pathfinder {
     // Keeps going in one direction until aligned with the collectible. Then turn towards it.
     LazyWalker,
