@@ -1,7 +1,6 @@
 use serde::{Deserialize, Serialize};
 
-use crate::constants::*;
-use crate::enums::Direction;
+use crate::enums::{Direction, Plane, plane_of_direction};
 use crate::snake_config::CONFIG;
 use crate::snake_game::SnakeGame;
 
