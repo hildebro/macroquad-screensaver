@@ -3,8 +3,7 @@ use std::fs;
 use lazy_static::lazy_static;
 use serde::{Deserialize, Serialize};
 
-use crate::constants::StartingPosition;
-use crate::enums::Pathfinder;
+use crate::enums::{Pathfinder, StartingPosition};
 
 #[derive(Serialize, Deserialize)]
 pub struct SnakeConfig {

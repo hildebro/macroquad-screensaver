@@ -1,3 +1,5 @@
 pub use pathfinder::{find_path, Pathfinder};
+pub use starting_position::StartingPosition;
 
-pub mod pathfinder;
+mod pathfinder;
+mod starting_position;

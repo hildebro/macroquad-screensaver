@@ -1,14 +1,5 @@
-use serde::{Deserialize, Serialize};
-
 // Characters to render.
 pub const ROFLCOPTER: [&'static str; 10] = ["R", "O", "F", "L", "C", "O", "P", "T", "E", "R"];
-
-#[derive(Serialize, Deserialize)]
-pub enum StartingPosition {
-    Corner,
-    Center,
-    Random,
-}
 
 #[derive(Clone, Copy)]
 pub enum Direction {
