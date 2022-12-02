@@ -1,7 +1,7 @@
 use macroquad::prelude::*;
 
 use crate::collectible_state::CollectibleState;
-use crate::player::{find_path, Pathfinder};
+use crate::enums::{find_path, Pathfinder};
 use crate::player_state::PlayerState;
 use crate::snake_config::CONFIG;
 

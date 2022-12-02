@@ -4,7 +4,7 @@ use lazy_static::lazy_static;
 use serde::{Deserialize, Serialize};
 
 use crate::constants::StartingPosition;
-use crate::player::Pathfinder;
+use crate::enums::Pathfinder;
 
 #[derive(Serialize, Deserialize, PartialEq, Copy, Clone)]
 pub struct SnakeConfig {
