@@ -1,4 +1,4 @@
-use crate::constants::Direction;
+use crate::enums::Direction;
 use crate::player_state::PlayerState;
 use crate::snake_config::CONFIG;
 

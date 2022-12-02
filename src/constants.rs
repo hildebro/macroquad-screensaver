@@ -1,13 +1,7 @@
+use crate::enums::Direction;
+
 // Characters to render.
 pub const ROFLCOPTER: [&'static str; 10] = ["R", "O", "F", "L", "C", "O", "P", "T", "E", "R"];
-
-#[derive(Clone, Copy)]
-pub enum Direction {
-    North,
-    South,
-    West,
-    East,
-}
 
 #[derive(PartialEq)]
 pub enum Plane {

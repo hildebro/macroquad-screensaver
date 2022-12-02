@@ -1,7 +1,7 @@
 use macroquad::prelude::*;
 
 use crate::constants::*;
-use crate::enums::StartingPosition;
+use crate::enums::{Direction, StartingPosition};
 use crate::player::move_player;
 use crate::snake_config::CONFIG;
 
