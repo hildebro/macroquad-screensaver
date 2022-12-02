@@ -1,7 +1,6 @@
 use macroquad::prelude::*;
 
 use crate::collectible_state::CollectibleState;
-use crate::constants::PLAYER_MOVE_INTERVAL;
 use crate::player::{find_path, Pathfinder};
 use crate::player_state::PlayerState;
 use crate::snake_config::CONFIG;
@@ -20,7 +19,7 @@ impl SnakeGame {
 
         // Don't move unless a bit of time has passed since the last move.
         let loop_time = get_time();
-        if loop_time - self.player_state.last_move_time <= PLAYER_MOVE_INTERVAL {
+        if loop_time - self.player_state.last_move_time <= CONFIG.move_interval {
             return;
         }
 

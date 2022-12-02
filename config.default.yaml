@@ -1,6 +1,7 @@
 instance_count: 100
 horizontal_slots: 80
 vertical_slots: 45
+move_interval: 0.05
 pathfinder: LazyWalker
 starting_position: Center
 draw_fps: false

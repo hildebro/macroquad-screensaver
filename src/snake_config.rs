@@ -8,17 +8,19 @@ use crate::player::Pathfinder;
 
 #[derive(Serialize, Deserialize, PartialEq, Copy, Clone)]
 pub struct SnakeConfig {
-    // How many games will run consecutively.
+    // Amount of snake games running consecutively.
     pub instance_count: i32,
-    // The amount of horizontal slots that can be occupied by game objects.
+    // Amount of horizontal slots that can be occupied by game objects.
     pub horizontal_slots: i32,
-    // The amount of vertical slots that can be occupied by game objects.
+    // Amount of vertical slots that can be occupied by game objects.
     pub vertical_slots: i32,
-    // Which pathfinder to use for the snake.
+    // Time in seconds that needs to pass between snakes moving to a new position.
+    pub move_interval: f64,
+    // Algorithm used to determine the route of the snakes.
     pub pathfinder: Pathfinder,
-    // Where the player will start from.
+    // Location from which the snakes will start from.
     pub starting_position: StartingPosition,
-    // Whether to draw the fps counter in the corner of the screen
+    // Whether to draw the fps counter in the corner of the screen.
     pub draw_fps: bool,
 }
 
