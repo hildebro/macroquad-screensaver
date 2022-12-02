@@ -19,7 +19,7 @@ pub fn find_path(snake_game: &SnakeGame) -> Direction {
 }
 
 fn lazy_walker_fn(snake_game: &SnakeGame) -> Direction {
-    let plane_of_direction = plane_of_direction(&snake_game.player_state.player_direction);
+    let plane_of_direction = plane_of_direction(&snake_game.player_state.last_move_direction);
     let player_x_pos = snake_game.player_state.player_x_pos();
     let player_y_pos = snake_game.player_state.player_y_pos();
 
@@ -28,7 +28,7 @@ fn lazy_walker_fn(snake_game: &SnakeGame) -> Direction {
     {
         // If we aren't aligned with the collectible horizontally while traversing the horizontal
         // plane, just keep going.
-        return snake_game.player_state.player_direction;
+        return snake_game.player_state.last_move_direction;
     }
 
     if player_y_pos != snake_game.collectible_state.y_position
@@ -36,7 +36,7 @@ fn lazy_walker_fn(snake_game: &SnakeGame) -> Direction {
     {
         // If we aren't aligned with the collectible vertically while traversing the vertical plane,
         // just keep going.
-        return snake_game.player_state.player_direction;
+        return snake_game.player_state.last_move_direction;
     }
 
     // At this point, we know that we need to change direction.
@@ -81,8 +81,8 @@ fn step_walker_fn(snake_game: &SnakeGame) -> Direction {
         )
     } else {
         // Not aligned at all, so there are two valid directions to take at this point. We don't
-        // want to continue on the current direction, so we switch based on that.
-        let plane = plane_of_direction(&snake_game.player_state.player_direction);
+        // want to continue on the current direction, so we switch based on last move.
+        let plane = plane_of_direction(&snake_game.player_state.last_move_direction);
         match plane {
             Plane::Vertical => get_optimal_direction(
                 player_x_pos,

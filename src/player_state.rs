@@ -8,8 +8,8 @@ pub struct PlayerState {
     pub snake_config: SnakeConfig,
     // x and y position of every part of the snake.
     pub player_parts: Vec<(i32, i32)>,
-    pub player_direction: Direction,
-    pub player_last_move_time: f64,
+    pub last_move_direction: Direction,
+    pub time_of_last_movement: f64,
 }
 
 impl PlayerState {
@@ -61,19 +61,13 @@ impl PlayerState {
         }
     }
 
-    pub fn update(&mut self, new_direction: Direction) {
-        let loop_time = get_time();
-        if loop_time - self.player_last_move_time <= PLAYER_MOVE_INTERVAL {
-            // Don't move unless a bit of time has passed since the last move.
-            return;
-        }
-
-        // Set new direction.
-        self.player_direction = new_direction;
+    pub fn update_location(&mut self, direction: Direction) {
         // Move the player
-        move_player(self);
+        move_player(self, direction);
+        // Set last move direction
+        self.last_move_direction = direction;
         // Reset the compare time.
-        self.player_last_move_time = loop_time;
+        self.time_of_last_movement = get_time();
     }
 
     pub fn new(snake_config: SnakeConfig) -> PlayerState {
@@ -93,9 +87,9 @@ impl PlayerState {
         PlayerState {
             snake_config,
             player_parts,
-            // Setting an arbitrary direction, because it will be overridden anyway.
-            player_direction: Direction::East,
-            player_last_move_time: get_time(),
+            // Setting an arbitrary direction to begin with.
+            last_move_direction: Direction::East,
+            time_of_last_movement: get_time(),
         }
     }
 }

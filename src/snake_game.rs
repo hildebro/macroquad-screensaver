@@ -1,6 +1,7 @@
 use macroquad::prelude::*;
 
 use crate::collectible_state::CollectibleState;
+use crate::constants::PLAYER_MOVE_INTERVAL;
 use crate::player::{find_path, Pathfinder};
 use crate::player_state::PlayerState;
 use crate::snake_config::SnakeConfig;
@@ -17,9 +18,20 @@ impl SnakeGame {
     pub fn update(&mut self) {
         // Always check for a pathfinder update.
         self.update_pathfinder();
-        let new_direction = find_path(self);
 
-        self.player_state.update(new_direction);
+        // Don't move unless a bit of time has passed since the last move.
+        let loop_time = get_time();
+        if loop_time - self.player_state.time_of_last_movement <= PLAYER_MOVE_INTERVAL {
+            return;
+        }
+
+        // Find the new direction for the player.
+        let direction = find_path(self);
+
+        // Update the player location.
+        self.player_state.update_location(direction);
+
+        // Check, whether the new location matches the collectible.
         self.collision_check();
     }
 

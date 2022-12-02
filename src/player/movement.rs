@@ -1,14 +1,14 @@
 use crate::constants::Direction;
 use crate::player_state::PlayerState;
 
-pub fn move_player(player_state: &mut PlayerState) {
+pub fn move_player(player_state: &mut PlayerState, direction: Direction) {
     // Move all body parts one step closer to the head.
     for i in (0..player_state.player_parts.len() - 1).rev() {
         player_state.player_parts[i + 1] = player_state.player_parts[i];
     }
 
     // Move the head to a new position.
-    match player_state.player_direction {
+    match direction {
         Direction::West => player_state.set_player_x_pos(player_state.player_x_pos() - 1),
         Direction::East => player_state.set_player_x_pos(player_state.player_x_pos() + 1),
         Direction::North => player_state.set_player_y_pos(player_state.player_y_pos() - 1),
