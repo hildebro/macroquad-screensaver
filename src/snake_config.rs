@@ -1,5 +1,6 @@
 use std::fs;
 
+use lazy_static::lazy_static;
 use serde::{Deserialize, Serialize};
 
 use crate::constants::StartingPosition;
@@ -21,8 +22,8 @@ pub struct SnakeConfig {
     pub draw_fps: bool,
 }
 
-impl SnakeConfig {
-    pub fn get_config() -> SnakeConfig {
+lazy_static! {
+    pub static ref CONFIG: SnakeConfig = {
         // Create the config from default, if it doesn't exist yet.
         if !fs::try_exists("config.yaml").unwrap() {
             fs::copy("config.default.yaml", "config.yaml").expect("Unable to initialize config.");
@@ -32,5 +33,5 @@ impl SnakeConfig {
         let snake_config_yaml = fs::read_to_string("config.yaml").expect("Unable to read config.");
 
         serde_yaml::from_str(snake_config_yaml.as_str()).unwrap()
-    }
+    };
 }

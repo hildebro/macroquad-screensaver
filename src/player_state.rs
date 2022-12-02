@@ -2,14 +2,13 @@ use macroquad::prelude::*;
 
 use crate::constants::*;
 use crate::player::move_player;
-use crate::snake_config::SnakeConfig;
+use crate::snake_config::CONFIG;
 
 pub struct PlayerState {
-    pub snake_config: SnakeConfig,
     // x and y position of every part of the snake.
     pub player_parts: Vec<(i32, i32)>,
     pub last_move_direction: Direction,
-    pub time_of_last_movement: f64,
+    pub last_move_time: f64,
 }
 
 impl PlayerState {
@@ -67,29 +66,25 @@ impl PlayerState {
         // Set last move direction
         self.last_move_direction = direction;
         // Reset the compare time.
-        self.time_of_last_movement = get_time();
+        self.last_move_time = get_time();
     }
 
-    pub fn new(snake_config: SnakeConfig) -> PlayerState {
-        let starting_position = match snake_config.starting_position {
+    pub fn new() -> PlayerState {
+        let starting_position = match CONFIG.starting_position {
             StartingPosition::Corner => (0, 0),
-            StartingPosition::Center => (
-                snake_config.horizontal_slots / 2,
-                snake_config.vertical_slots / 2,
-            ),
+            StartingPosition::Center => (CONFIG.horizontal_slots / 2, CONFIG.vertical_slots / 2),
             StartingPosition::Random => (
-                rand::gen_range(0, snake_config.horizontal_slots),
-                rand::gen_range(0, snake_config.vertical_slots),
+                rand::gen_range(0, CONFIG.horizontal_slots),
+                rand::gen_range(0, CONFIG.vertical_slots),
             ),
         };
         let player_parts = vec![starting_position];
 
         PlayerState {
-            snake_config,
             player_parts,
             // Setting an arbitrary direction to begin with.
             last_move_direction: Direction::East,
-            time_of_last_movement: get_time(),
+            last_move_time: get_time(),
         }
     }
 }

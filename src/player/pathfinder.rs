@@ -1,6 +1,7 @@
 use serde::{Deserialize, Serialize};
 
 use crate::constants::*;
+use crate::snake_config::CONFIG;
 use crate::snake_game::SnakeGame;
 
 #[derive(Serialize, Deserialize, PartialEq, Copy, Clone)]
@@ -68,7 +69,7 @@ fn step_walker_fn(snake_game: &SnakeGame) -> Direction {
         get_optimal_direction(
             player_y_pos,
             char_y_pos,
-            snake_game.snake_config.vertical_slots,
+            CONFIG.vertical_slots,
             Plane::Vertical,
         )
     } else if player_y_pos == char_y_pos {
@@ -76,7 +77,7 @@ fn step_walker_fn(snake_game: &SnakeGame) -> Direction {
         get_optimal_direction(
             player_x_pos,
             char_x_pos,
-            snake_game.snake_config.horizontal_slots,
+            CONFIG.horizontal_slots,
             Plane::Horizontal,
         )
     } else {
@@ -87,13 +88,13 @@ fn step_walker_fn(snake_game: &SnakeGame) -> Direction {
             Plane::Vertical => get_optimal_direction(
                 player_x_pos,
                 char_x_pos,
-                snake_game.snake_config.horizontal_slots,
+                CONFIG.horizontal_slots,
                 Plane::Horizontal,
             ),
             Plane::Horizontal => get_optimal_direction(
                 player_y_pos,
                 char_y_pos,
-                snake_game.snake_config.vertical_slots,
+                CONFIG.vertical_slots,
                 Plane::Vertical,
             ),
         }

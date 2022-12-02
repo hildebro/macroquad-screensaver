@@ -4,10 +4,9 @@ use crate::collectible_state::CollectibleState;
 use crate::constants::PLAYER_MOVE_INTERVAL;
 use crate::player::{find_path, Pathfinder};
 use crate::player_state::PlayerState;
-use crate::snake_config::SnakeConfig;
+use crate::snake_config::CONFIG;
 
 pub struct SnakeGame {
-    pub snake_config: SnakeConfig,
     pub player_state: PlayerState,
     pub collectible_state: CollectibleState,
     pub pathfinder: Pathfinder,
@@ -21,7 +20,7 @@ impl SnakeGame {
 
         // Don't move unless a bit of time has passed since the last move.
         let loop_time = get_time();
-        if loop_time - self.player_state.time_of_last_movement <= PLAYER_MOVE_INTERVAL {
+        if loop_time - self.player_state.last_move_time <= PLAYER_MOVE_INTERVAL {
             return;
         }
 
@@ -47,8 +46,8 @@ impl SnakeGame {
 
     pub fn draw(&self) {
         // get potential font sizes based on absolute size and slots.
-        let font_size_by_width = screen_width() / self.snake_config.horizontal_slots as f32;
-        let font_size_by_height = screen_height() / self.snake_config.vertical_slots as f32;
+        let font_size_by_width = screen_width() / CONFIG.horizontal_slots as f32;
+        let font_size_by_height = screen_height() / CONFIG.vertical_slots as f32;
         // use the smaller option of the two to ensure it fits the screen.
         let font_size = font_size_by_width.min(font_size_by_height);
 
@@ -65,16 +64,15 @@ impl SnakeGame {
         }
     }
 
-    pub fn new(snake_config: SnakeConfig) -> SnakeGame {
+    pub fn new() -> SnakeGame {
         let r = rand::gen_range(0.5, 1.0);
         let g = rand::gen_range(0.5, 1.0);
         let b = rand::gen_range(0.5, 1.0);
 
         SnakeGame {
-            snake_config,
-            player_state: PlayerState::new(snake_config),
-            collectible_state: CollectibleState::new(snake_config),
-            pathfinder: snake_config.pathfinder,
+            player_state: PlayerState::new(),
+            collectible_state: CollectibleState::new(),
+            pathfinder: CONFIG.pathfinder,
             color: Color::new(r, g, b, 1.0),
         }
     }

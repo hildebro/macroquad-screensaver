@@ -1,3 +1,5 @@
+extern crate lazy_static;
+
 use std::time::{SystemTime, UNIX_EPOCH};
 
 use macroquad::prelude::*;
