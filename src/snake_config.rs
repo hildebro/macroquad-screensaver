@@ -1,4 +1,4 @@
-use std::fs;
+use std::{fs, path::Path};
 
 use lazy_static::lazy_static;
 use serde::{Deserialize, Serialize};
@@ -23,16 +23,28 @@ pub struct SnakeConfig {
     pub draw_fps: bool,
 }
 
+impl Default for SnakeConfig {
+    fn default() -> Self {
+        Self {
+            instance_count: 100,
+            horizontal_slots: 80,
+            vertical_slots: 45,
+            move_interval: 0.05,
+            pathfinder: Pathfinder::LazyWalker,
+            starting_position: StartingPosition::Center,
+            draw_fps: false,
+        }
+    }
+}
+
 lazy_static! {
     pub static ref CONFIG: SnakeConfig = {
-        // Create the config from default, if it doesn't exist yet.
-        if !fs::try_exists("config.yaml").unwrap() {
-            fs::copy("config.default.yaml", "config.yaml").expect("Unable to initialize config.");
+        // Parse the config if it exist.
+        if Path::new("config.yaml").exists() {
+            let snake_config_yaml = fs::read_to_string("config.yaml").expect("Unable to read config.");
+            serde_yaml::from_str(snake_config_yaml.as_str()).expect("Unable to deserialize config.")
+        } else {
+            SnakeConfig::default()
         }
-
-        // Read the config.
-        let snake_config_yaml = fs::read_to_string("config.yaml").expect("Unable to read config.");
-
-        serde_yaml::from_str(snake_config_yaml.as_str()).unwrap()
     };
 }

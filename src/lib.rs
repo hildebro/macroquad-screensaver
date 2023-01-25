@@ -1,5 +1,3 @@
-#![feature(fs_try_exists)]
-
 mod collectible_state;
 mod constants;
 mod enums;
