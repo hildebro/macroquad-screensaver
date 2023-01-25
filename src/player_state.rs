@@ -41,11 +41,9 @@ impl PlayerState {
         self.player_parts[0].1 = pos;
     }
 
+    /// Draw all parts of the player.
     pub fn draw(&self, font_size: f32, color: Color) {
-        // Draw every player part. In order to know, which letter of ROFLCOPTER to draw per part,
-        // an index variable is used that increments after each draw.
-        let mut index = 0;
-        for player_part in self.player_parts.iter() {
+        for (index, player_part) in self.player_parts.iter().enumerate() {
             let abs_letter_x_pos = player_part.0 as f32 * font_size;
             let abs_letter_y_pos = player_part.1 as f32 * font_size;
 
@@ -56,8 +54,6 @@ impl PlayerState {
                 font_size,
                 color,
             );
-
-            index += 1;
         }
     }
 
