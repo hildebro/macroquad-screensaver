@@ -34,3 +34,9 @@ impl SnakeGameCollection {
         }
     }
 }
+
+impl Default for SnakeGameCollection {
+    fn default() -> Self {
+        Self::new()
+    }
+}

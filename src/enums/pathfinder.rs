@@ -41,7 +41,7 @@ fn lazy_walker_fn(snake_game: &SnakeGame) -> Direction {
     }
 
     // At this point, we know that we need to change direction.
-    return if player_x_pos == snake_game.collectible_state.x_position {
+    if player_x_pos == snake_game.collectible_state.x_position {
         // Horizontally aligned, so we need to either go north or south.
         if player_y_pos < snake_game.collectible_state.y_position {
             Direction::South
@@ -55,7 +55,7 @@ fn lazy_walker_fn(snake_game: &SnakeGame) -> Direction {
         } else {
             Direction::West
         }
-    };
+    }
 }
 
 fn step_walker_fn(snake_game: &SnakeGame) -> Direction {
@@ -64,7 +64,7 @@ fn step_walker_fn(snake_game: &SnakeGame) -> Direction {
     let char_x_pos = snake_game.collectible_state.x_position;
     let char_y_pos = snake_game.collectible_state.y_position;
 
-    return if player_x_pos == char_x_pos {
+    if player_x_pos == char_x_pos {
         // The player is aligned horizontally, so just pick the correct vertical direction.
         get_optimal_direction(
             player_y_pos,
@@ -98,7 +98,7 @@ fn step_walker_fn(snake_game: &SnakeGame) -> Direction {
                 Plane::Vertical,
             ),
         }
-    };
+    }
 }
 
 /// Decides, whether traversal over the edge of the screen is quicker than line-of-sight direction.
